@@ -20,6 +20,7 @@ import ru.mipt.bit.platformer.util.TileMovement;
 import static com.badlogic.gdx.Input.Keys.*;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import static com.badlogic.gdx.math.MathUtils.isEqual;
+import static ru.mipt.bit.platformer.Tank.motionFinished;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 import ru.mipt.bit.platformer.Tank;
@@ -77,39 +78,19 @@ public class GameDesktopLauncher implements ApplicationListener {
         // get time passed since the last render
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-        if (Gdx.input.isKeyPressed(UP) || Gdx.input.isKeyPressed(W)) {
-            if (isEqual(playerTank.getMotionProgress(), 1f)) {
-                // check potential player destination for collision with obstacles
-                if (!treeObstacleCoordinates.equals(incrementedY(playerTank.getCoordinates()))) {
-                    playerTank.startMotion(Tank.Direction.UP);
+        PlayerInput.Result input = PlayerInput.chosenDirection();
+        if(input.moveKeyPressed){
+            if (isEqual(playerTank.getMotionProgress(), motionFinished)) {
+                GridPoint2 predict = playerTank.predictCoordinates(input.direction);
+                // (Object obst : level.map.obstacles) {}
+                if (!treeObstacleCoordinates.equals(predict)) {
+                    playerTank.startMotion(input.direction);
                 }
-                playerTank.makeTurn(Tank.Direction.UP);
+
+                playerTank.makeTurn(input.direction);
             }
         }
-        if (Gdx.input.isKeyPressed(LEFT) || Gdx.input.isKeyPressed(A)) {
-            if (isEqual(playerTank.getMotionProgress(), 1f)) {
-                if (!treeObstacleCoordinates.equals(decrementedX(playerTank.getCoordinates()))) {
-                    playerTank.startMotion(Tank.Direction.LEFT);
-                }
-                playerTank.makeTurn(Tank.Direction.LEFT);
-            }
-        }
-        if (Gdx.input.isKeyPressed(DOWN) || Gdx.input.isKeyPressed(S)) {
-            if (isEqual(playerTank.getMotionProgress(), 1f)) {
-                if (!treeObstacleCoordinates.equals(decrementedY(playerTank.getCoordinates()))) {
-                    playerTank.startMotion(Tank.Direction.DOWN);
-                }
-                playerTank.makeTurn(Tank.Direction.DOWN);
-            }
-        }
-        if (Gdx.input.isKeyPressed(RIGHT) || Gdx.input.isKeyPressed(D)) {
-            if (isEqual(playerTank.getMotionProgress(), 1f)) {
-                if (!treeObstacleCoordinates.equals(incrementedX(playerTank.getCoordinates()))) {
-                    playerTank.startMotion(Tank.Direction.RIGHT);
-                }
-                playerTank.makeTurn(Tank.Direction.RIGHT);
-            }
-        }
+
 
         // calculate interpolated player screen coordinates
         tileMovement.moveRectangleBetweenTileCenters(playerTank.getRectangle(), playerTank.getCoordinates(),

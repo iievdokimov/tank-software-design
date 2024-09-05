@@ -1,13 +1,11 @@
 package ru.mipt.bit.platformer;
 
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Rectangle;
 import ru.mipt.bit.platformer.Tank;
 
-import java.awt.*;
 
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.continueProgress;
@@ -33,9 +31,10 @@ public class TexturedTank implements Tank {
         coordinates = new GridPoint2(location);
         destCoordinates = new GridPoint2(coordinates);
         rotation = rotationAngle;
-        motionProgress = 1f;
+        motionProgress = motionFinished;
     }
 
+    @Override
     public void startMotion(Direction direction) {
         switch (direction){
             case UP -> destCoordinates.y++;
@@ -43,9 +42,22 @@ public class TexturedTank implements Tank {
             case RIGHT -> destCoordinates.x++;
             case LEFT -> destCoordinates.x--;
         }
-        motionProgress = 0f;
+        motionProgress = motionStarted;
     }
 
+    @Override
+    public GridPoint2 predictCoordinates(Direction direction) {
+        GridPoint2 predict = new GridPoint2(coordinates.x, coordinates.y);
+        switch (direction){
+            case UP -> predict.y++;
+            case DOWN -> predict.y--;
+            case RIGHT -> predict.x++;
+            case LEFT -> predict.x--;
+        }
+        return predict;
+    }
+
+    @Override
     public void makeTurn(Direction direction) {
         switch (direction){
             case UP -> rotation = 90f;
@@ -55,40 +67,48 @@ public class TexturedTank implements Tank {
         }
     }
 
+    @Override
     public void stopMotion() {
-        motionProgress = 1f;
+        motionProgress = motionFinished;
     }
 
+    @Override
     public GridPoint2 getCoordinates() {
         return coordinates;
     }
+    @Override
     public GridPoint2 getDestCoordinates() {
         return destCoordinates;
     }
-
+    @Override
     public float getMotionProgress() {
         return motionProgress;
     }
 
+    @Override
     public void updateMotionProgress(float deltaTime, float motionSpeed){
         motionProgress = continueProgress(motionProgress, deltaTime, motionSpeed);
-        if (isEqual(motionProgress, 1f)) {
+        if (isEqual(motionProgress, motionFinished)) {
             coordinates.set(destCoordinates);
         }
     }
 
+    @Override
     public Rectangle getRectangle() {
         return rectangle;
     }
 
+    @Override
     public TextureRegion getGraphics() {
         return graphics;
     }
 
+    @Override
     public float getRotation() {
         return rotation;
     }
 
+    @Override
     public void dispose() {
         texture.dispose();
     }
