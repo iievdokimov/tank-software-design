@@ -6,7 +6,9 @@ import static com.badlogic.gdx.Input.Keys.*;
 import static com.badlogic.gdx.Input.Keys.A;
 
 public class PlayerInput {
+
     public static class Result{
+
         public final boolean moveKeyPressed;
         public final Tank.Direction direction;
 

@@ -12,6 +12,7 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.continueProgress;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.createBoundingRectangle;
 
 public class TexturedTank implements Tank {
+
     private float rotation;
     private GridPoint2 coordinates;
     private GridPoint2 destCoordinates;
@@ -20,6 +21,7 @@ public class TexturedTank implements Tank {
     private final Texture texture;
     private final TextureRegion graphics;
     private final Rectangle rectangle;
+
 
     public TexturedTank(GridPoint2 location, float rotationAngle, String texturePath) {
         // Texture decodes an image file and loads it into GPU memory, it represents a native resource
@@ -47,7 +49,7 @@ public class TexturedTank implements Tank {
 
     @Override
     public GridPoint2 predictCoordinates(Direction direction) {
-        GridPoint2 predict = new GridPoint2(coordinates.x, coordinates.y);
+        GridPoint2 predict = new GridPoint2(coordinates);
         switch (direction){
             case UP -> predict.y++;
             case DOWN -> predict.y--;
@@ -90,6 +92,7 @@ public class TexturedTank implements Tank {
         motionProgress = continueProgress(motionProgress, deltaTime, motionSpeed);
         if (isEqual(motionProgress, motionFinished)) {
             coordinates.set(destCoordinates);
+            stopMotion();
         }
     }
 
