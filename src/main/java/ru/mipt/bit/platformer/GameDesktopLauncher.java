@@ -73,6 +73,7 @@ public class GameDesktopLauncher implements ApplicationListener {
 
 
         // calculate interpolated player screen coordinates
+        // move to Tank.processMotion(TileMovement) (?)
         level.getTileMovement().moveRectangleBetweenTileCenters(playerTank.getRectangle(), playerTank.getCoordinates(),
                 playerTank.getDestCoordinates(), playerTank.getMotionProgress());
 
