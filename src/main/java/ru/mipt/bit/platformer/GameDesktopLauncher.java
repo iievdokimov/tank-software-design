@@ -58,14 +58,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         if(input.moveKeyPressed){
             if (isEqual(playerTank.getMotionProgress(), motionFinished)) {
                 GridPoint2 predict = playerTank.predictCoordinates(input.direction);
-                boolean collision = false;
-                for (Level.TreeObstacle obst : level.getTreeObstacles()) {
-                    if(obst.getCoordinates().equals(predict)){
-                        collision = true;
-                        break;
-                    }
-                }
-                if (!collision) {
+                if (level.freeCoordinates(predict)) {
                     playerTank.startMotion(input.direction);
                 }
 

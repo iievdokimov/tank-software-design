@@ -17,6 +17,17 @@ public class Level {
         return treeObstacles;
     }
 
+    public boolean freeCoordinates(GridPoint2 coordinates) {
+        boolean free = true;
+        for (Level.TreeObstacle obst : treeObstacles) {
+            if(obst.getCoordinates().equals(coordinates)){
+                free = false;
+                break;
+            }
+        }
+        return free;
+    }
+
 
     public static class TreeObstacle{
         private final GridPoint2 coordinates;
