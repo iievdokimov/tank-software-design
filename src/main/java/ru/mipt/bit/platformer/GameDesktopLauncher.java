@@ -4,23 +4,21 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.GridPoint2;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import static com.badlogic.gdx.math.MathUtils.isEqual;
-import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 import ru.mipt.bit.platformer.Tank;
 import static ru.mipt.bit.platformer.Tank.motionFinished;
-import ru.mipt.bit.platformer.TexturedTank;
+import ru.mipt.bit.platformer.GdxTank;
 
 public class GameDesktopLauncher implements ApplicationListener {
 
-    private static final float MOVEMENT_SPEED = 0.4f;
+    private static final float MOVEMENT_SPEED = 0.4f; // ?
 
-    private Batch batch;
+
+    private Drawer drawer;
 
     private Level level;
 
@@ -29,18 +27,22 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     @Override
     public void create() {
-        batch = new SpriteBatch();
-
         // create level
         GridPoint2[] treeObstacleCoordinates = {new GridPoint2(3, 3), new GridPoint2(1, 3)};
-        level = new Level("level.tmx", batch,
-                treeObstacleCoordinates, "images/greenTree.png");
+        level = new Level(treeObstacleCoordinates);
 
         // create playerTank
         GridPoint2 startCoordinates = new GridPoint2(1, 1);
         float startRotation = 0f;
-        playerTank = new TexturedTank(startCoordinates, startRotation, "images/tank_blue.png");
+        playerTank = new GdxTank(startCoordinates, startRotation);
 
+        // create visuals
+        GdxDrawer.VisualObject visualTank = new GdxDrawer.VisualObject("images/tank_blue.png");
+        GdxDrawer.VisualObject visualTree = new GdxDrawer.VisualObject("images/greenTree.png");
+        GdxDrawer.VisualLevel visualLevel = new GdxDrawer.VisualLevel("level.tmx");
+
+        // create drawer
+        drawer = new GdxDrawer(level, playerTank, visualLevel, visualTree, visualTank);
     }
 
     @Override
@@ -71,30 +73,13 @@ public class GameDesktopLauncher implements ApplicationListener {
             }
         }
 
-
-        // calculate interpolated player screen coordinates
-        // move to Tank.processMotion(TileMovement) (?)
-        level.getTileMovement().moveRectangleBetweenTileCenters(playerTank.getRectangle(), playerTank.getCoordinates(),
-                playerTank.getDestCoordinates(), playerTank.getMotionProgress());
+        drawer.processTankMotion(playerTank);
 
         playerTank.updateMotionProgress(deltaTime, MOVEMENT_SPEED);
 
+        drawer.drawVisuals(level, playerTank);
 
-        // render each tile of the level
-        level.getLevelRenderer().render();
 
-        // start recording all drawing commands
-        batch.begin();
-
-        // render player
-        // TODO: where to locate Batch - ?
-        playerTank.draw(batch);
-
-        // render obstacles
-        level.drawObstacles();
-
-        // submit all drawing requests
-        batch.end();
     }
 
     @Override
@@ -115,9 +100,7 @@ public class GameDesktopLauncher implements ApplicationListener {
     @Override
     public void dispose() {
         // dispose of all the native resources (classes which implement com.badlogic.gdx.utils.Disposable)
-        playerTank.dispose();
-        level.dispose();
-        batch.dispose();
+        drawer.dispose();
     }
 
     public static void main(String[] args) {
