@@ -55,7 +55,7 @@ public class Level {
     public void drawObstacles(){
         for (TreeObstacle treeObstacle : treeObstacles) {
             // render tree obstacle
-            drawTextureRegionUnscaled(batch, treeObstacle.getGraphics(), treeObstacle.getRectangle(), 0f);
+            treeObstacle.draw(batch);
         }
     }
 
@@ -73,6 +73,7 @@ public class Level {
         private final Texture texture;
         private final TextureRegion graphics;
         private final Rectangle rectangle;
+        private final float rotation;
 
         TreeObstacle(GridPoint2 coordinates, String texturePath){
             this.coordinates = new GridPoint2(coordinates);
@@ -80,6 +81,11 @@ public class Level {
             graphics = new TextureRegion(texture);
             rectangle = createBoundingRectangle(graphics);
             moveRectangleAtTileCenter(groundLayer, rectangle, this.coordinates);
+            rotation = 0f;
+        }
+
+        public void draw(Batch batch) {
+            drawTextureRegionUnscaled(batch, graphics, rectangle, rotation);
         }
 
         public Rectangle getRectangle() {

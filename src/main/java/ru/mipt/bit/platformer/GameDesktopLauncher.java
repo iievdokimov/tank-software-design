@@ -87,7 +87,8 @@ public class GameDesktopLauncher implements ApplicationListener {
         batch.begin();
 
         // render player
-        drawTextureRegionUnscaled(batch, playerTank.getGraphics(), playerTank.getRectangle(), playerTank.getRotation());
+        // TODO: where to locate Batch - ?
+        playerTank.draw(batch);
 
         // render obstacles
         level.drawObstacles();

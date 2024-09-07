@@ -1,6 +1,7 @@
 package ru.mipt.bit.platformer;
 
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Rectangle;
@@ -26,6 +27,7 @@ public interface Tank {
         TextureRegion getGraphics();
         float getRotation();
 
+        void draw(Batch batch);
         void dispose();
 
         // alternative: constants{90, -90, 180, 0} - better?\

@@ -1,6 +1,7 @@
 package ru.mipt.bit.platformer;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Rectangle;
@@ -8,8 +9,7 @@ import ru.mipt.bit.platformer.Tank;
 
 
 import static com.badlogic.gdx.math.MathUtils.isEqual;
-import static ru.mipt.bit.platformer.util.GdxGameUtils.continueProgress;
-import static ru.mipt.bit.platformer.util.GdxGameUtils.createBoundingRectangle;
+import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class TexturedTank implements Tank {
 
@@ -94,6 +94,11 @@ public class TexturedTank implements Tank {
             coordinates.set(destCoordinates);
             stopMotion();
         }
+    }
+
+    @Override
+    public void draw(Batch batch) {
+        drawTextureRegionUnscaled(batch, graphics, rectangle, rotation);
     }
 
     @Override

@@ -3,7 +3,6 @@ package ru.mipt.bit.platformer;
 import com.badlogic.gdx.Gdx;
 
 import static com.badlogic.gdx.Input.Keys.*;
-import static com.badlogic.gdx.Input.Keys.A;
 
 public class PlayerInput {
 
