@@ -54,7 +54,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         // get time passed since the last render
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-        PlayerInput.Result input = PlayerInput.chosenDirection();
+        PlayerInput.Result input = PlayerInput.chooseDirection();
         if(input.moveKeyPressed){
             if (isEqual(playerTank.getMotionProgress(), motionFinished)) {
                 GridPoint2 predict = playerTank.predictCoordinates(input.direction);

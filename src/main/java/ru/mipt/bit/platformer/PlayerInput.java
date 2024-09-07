@@ -17,7 +17,7 @@ public class PlayerInput {
         }
     }
 
-    public static Result chosenDirection(){
+    public static Result chooseDirection(){
         if (Gdx.input.isKeyPressed(UP) || Gdx.input.isKeyPressed(W)) {
             return new Result(true, Tank.Direction.UP);
         } else if (Gdx.input.isKeyPressed(LEFT) || Gdx.input.isKeyPressed(A)) {
