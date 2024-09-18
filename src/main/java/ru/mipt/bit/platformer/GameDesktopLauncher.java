@@ -14,8 +14,13 @@ import static ru.mipt.bit.platformer.logics.Tank.motionFinished;
 import ru.mipt.bit.platformer.logics.Level;
 import ru.mipt.bit.platformer.logics.PlayerInput;
 import ru.mipt.bit.platformer.logics.Tank;
+import ru.mipt.bit.platformer.logics.Tree;
 import ru.mipt.bit.platformer.visuals.Drawer;
 import ru.mipt.bit.platformer.visuals.GdxDrawer;
+import ru.mipt.bit.platformer.visuals.VisualLevel;
+import ru.mipt.bit.platformer.visuals.VisualObject;
+
+import java.util.ArrayList;
 
 public class GameDesktopLauncher implements ApplicationListener {
 
@@ -32,7 +37,9 @@ public class GameDesktopLauncher implements ApplicationListener {
     @Override
     public void create() {
         // create level
-        GridPoint2[] treeObstacleCoordinates = {new GridPoint2(3, 3), new GridPoint2(1, 3)};
+        ArrayList<GridPoint2> treeObstacleCoordinates = new ArrayList<GridPoint2>();
+        treeObstacleCoordinates.add(new GridPoint2(3, 3));
+        treeObstacleCoordinates.add(new GridPoint2(1, 3));
         level = new Level(treeObstacleCoordinates);
 
         // create playerTank
@@ -41,9 +48,9 @@ public class GameDesktopLauncher implements ApplicationListener {
         playerTank = new Tank(startCoordinates, startRotation);
 
         // create visuals
-        GdxDrawer.VisualObject visualTank = new GdxDrawer.VisualObject("images/tank_blue.png");
-        GdxDrawer.VisualObject visualTree = new GdxDrawer.VisualObject("images/greenTree.png");
-        GdxDrawer.VisualLevel visualLevel = new GdxDrawer.VisualLevel("level.tmx");
+        VisualObject visualTank = new VisualObject("images/tank_blue.png");
+        VisualObject visualTree = new VisualObject("images/greenTree.png");
+        VisualLevel visualLevel = new VisualLevel("level.tmx");
 
         // create drawer
         drawer = new GdxDrawer(level, playerTank, visualLevel, visualTree, visualTank);
