@@ -9,9 +9,13 @@ import com.badlogic.gdx.math.GridPoint2;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 
-import ru.mipt.bit.platformer.Tank;
-import static ru.mipt.bit.platformer.Tank.motionFinished;
-import ru.mipt.bit.platformer.GdxTank;
+import static ru.mipt.bit.platformer.logics.Tank.motionFinished;
+
+import ru.mipt.bit.platformer.logics.Level;
+import ru.mipt.bit.platformer.logics.PlayerInput;
+import ru.mipt.bit.platformer.logics.Tank;
+import ru.mipt.bit.platformer.visuals.Drawer;
+import ru.mipt.bit.platformer.visuals.GdxDrawer;
 
 public class GameDesktopLauncher implements ApplicationListener {
 
@@ -34,7 +38,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         // create playerTank
         GridPoint2 startCoordinates = new GridPoint2(1, 1);
         float startRotation = 0f;
-        playerTank = new GdxTank(startCoordinates, startRotation);
+        playerTank = new Tank(startCoordinates, startRotation);
 
         // create visuals
         GdxDrawer.VisualObject visualTank = new GdxDrawer.VisualObject("images/tank_blue.png");

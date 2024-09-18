@@ -1,4 +1,4 @@
-package ru.mipt.bit.platformer;
+package ru.mipt.bit.platformer.logics;
 
 import com.badlogic.gdx.math.GridPoint2;
 
@@ -6,7 +6,17 @@ import com.badlogic.gdx.math.GridPoint2;
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.continueProgress;
 
-public class GdxTank implements Tank {
+public class Tank {
+    enum Direction{
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT,
+        NULL
+    }
+
+    public static final float motionStarted = 0f;
+    public static final float motionFinished = 1f;
 
     private float rotation;
     private GridPoint2 coordinates;
@@ -15,14 +25,13 @@ public class GdxTank implements Tank {
     private float motionProgress;
 
 
-    public GdxTank(GridPoint2 location, float rotationAngle) {
+    public Tank(GridPoint2 location, float rotationAngle) {
         coordinates = new GridPoint2(location);
         destCoordinates = new GridPoint2(coordinates);
         rotation = rotationAngle;
         motionProgress = motionFinished;
     }
 
-    @Override
     public void startMotion(Direction direction) {
         switch (direction){
             case UP -> destCoordinates.y++;
@@ -33,7 +42,6 @@ public class GdxTank implements Tank {
         motionProgress = motionStarted;
     }
 
-    @Override
     public GridPoint2 predictCoordinates(Direction direction) {
         GridPoint2 predict = new GridPoint2(coordinates);
         switch (direction){
@@ -45,7 +53,6 @@ public class GdxTank implements Tank {
         return predict;
     }
 
-    @Override
     public void makeTurn(Direction direction) {
         switch (direction){
             case UP -> rotation = 90f;
@@ -55,7 +62,6 @@ public class GdxTank implements Tank {
         }
     }
 
-    @Override
     public void updateMotionProgress(float deltaTime, float motionSpeed){
         motionProgress = continueProgress(motionProgress, deltaTime, motionSpeed);
         if (isEqual(motionProgress, motionFinished)) {
@@ -64,27 +70,22 @@ public class GdxTank implements Tank {
         }
     }
 
-    @Override
     public void stopMotion() {
         motionProgress = motionFinished;
     }
 
-    @Override
     public GridPoint2 getCoordinates() {
         return coordinates;
     }
 
-    @Override
     public GridPoint2 getDestCoordinates() {
         return destCoordinates;
     }
 
-    @Override
     public float getMotionProgress() {
         return motionProgress;
     }
 
-    @Override
     public float getRotation() {
         return rotation;
     }

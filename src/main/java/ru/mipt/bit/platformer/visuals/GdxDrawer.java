@@ -1,4 +1,4 @@
-package ru.mipt.bit.platformer;
+package ru.mipt.bit.platformer.visuals;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -10,6 +10,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
+import ru.mipt.bit.platformer.logics.Level;
+import ru.mipt.bit.platformer.logics.Tank;
 import ru.mipt.bit.platformer.util.TileMovement;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
@@ -25,7 +27,7 @@ public class GdxDrawer implements Drawer {
     private Batch batch;
     private static TiledMapTileLayer groundLayer;
 
-    GdxDrawer(Level level, Tank tank, VisualLevel gdxLevel, VisualObject gdxTree, VisualObject gdxTank) {
+    public GdxDrawer(Level level, Tank tank, VisualLevel gdxLevel, VisualObject gdxTree, VisualObject gdxTank) {
         this.gdxLevel = gdxLevel;
         this.gdxTank = gdxTank;
         this.gdxTree = gdxTree;
@@ -95,7 +97,7 @@ public class GdxDrawer implements Drawer {
     public static class VisualLevel{
         private final TiledMap levelTileMap;
 
-        VisualLevel(String levelTilePath) {
+        public VisualLevel(String levelTilePath) {
             levelTileMap = new TmxMapLoader().load(levelTilePath);
         }
 
@@ -115,7 +117,7 @@ public class GdxDrawer implements Drawer {
         private final Rectangle rectangle;
         private final String texturePath;
 
-        VisualObject(String texturePath) {
+        public VisualObject(String texturePath) {
             texture = new Texture(texturePath);
             graphics = new TextureRegion(texture);
             rectangle = createBoundingRectangle(graphics);
