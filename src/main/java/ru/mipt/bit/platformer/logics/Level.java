@@ -30,6 +30,15 @@ public class Level {
 
     }
 
+    public Level(){
+        treeObstacles = new ArrayList<>();
+        min_x = Integer.MIN_VALUE;
+        min_y = Integer.MIN_VALUE;
+        max_x = Integer.MAX_VALUE;
+        max_y = Integer.MAX_VALUE;
+    }
+
+
     public List<Tree> getTreeObstacles() {
         return treeObstacles;
     }

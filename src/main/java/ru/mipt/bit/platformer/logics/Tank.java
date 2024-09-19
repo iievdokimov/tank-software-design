@@ -77,4 +77,8 @@ public class Tank {
     public float getRotation() {
         return direction.getAngle();
     }
+
+    public Direction getDirection() {
+        return direction;
+    }
 }

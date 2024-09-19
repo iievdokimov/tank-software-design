@@ -3,6 +3,8 @@ package ru.mipt.bit.platformer.logics;
 import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.util.Vector2D;
 
+import java.util.Objects;
+
 public class Direction {
 
     private final simpleDirection direction;
@@ -51,8 +53,20 @@ public class Direction {
         return rotation_angle;
     }
 
-    public simpleDirection getDirection(){
+    public simpleDirection getSimpleDirection(){
         return direction;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Direction direction1 = (Direction) o;
+        return Float.compare(rotation_angle, direction1.rotation_angle) == 0 && direction == direction1.direction && Objects.equals(rotation_vec, direction1.rotation_vec);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(direction, rotation_vec, rotation_angle);
+    }
 }
