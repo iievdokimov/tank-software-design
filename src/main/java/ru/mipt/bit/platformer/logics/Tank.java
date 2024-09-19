@@ -36,8 +36,6 @@ public class Tank {
 
     }
 
-
-
     public void startMotion(Direction direction) {
         destCoordinates = destCoordinates.add(direction.getVector());
         motionProgress = motionStarted;

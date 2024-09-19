@@ -39,7 +39,10 @@ public class GameDesktopLauncher implements ApplicationListener {
         ArrayList<Vector2D> treeObstacleCoordinates = new ArrayList<Vector2D>();
         treeObstacleCoordinates.add(new Vector2D(3, 3));
         treeObstacleCoordinates.add(new Vector2D(1, 3));
-        level = new Level(treeObstacleCoordinates);
+
+        Vector2D leftCorner = new Vector2D(0, 0);
+        Vector2D rightCorner = new Vector2D(9, 7);
+        level = new Level(leftCorner, rightCorner, treeObstacleCoordinates);
 
         // create playerTank
         Vector2D startCoordinates = new Vector2D(1, 1);
