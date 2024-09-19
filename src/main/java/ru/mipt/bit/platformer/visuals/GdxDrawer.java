@@ -39,10 +39,11 @@ public class GdxDrawer implements Drawer {
 
         for (int i = 0; i < level.getTreeObstacles().size(); i++) {
             gdxTrees[i] = new VisualObject(gdxTree);
-            moveRectangleAtTileCenter(groundLayer, gdxTrees[i].getRectangle(), level.getTreeObstacles().get(i).getCoordinates());
+            moveRectangleAtTileCenter(groundLayer, gdxTrees[i].getRectangle(),
+                    level.getTreeObstacles().get(i).getCoordinates().toGridPoint2());
         }
 
-        moveRectangleAtTileCenter(groundLayer, gdxTank.getRectangle(), tank.getCoordinates());
+        moveRectangleAtTileCenter(groundLayer, gdxTank.getRectangle(), tank.getCoordinates().toGridPoint2());
     }
 
 
@@ -74,8 +75,8 @@ public class GdxDrawer implements Drawer {
     @Override
     public void processTankMotion(Tank playerTank) {
         // calculate interpolated player screen coordinates
-        tileMovement.moveRectangleBetweenTileCenters(gdxTank.getRectangle(), playerTank.getCoordinates(),
-                playerTank.getDestCoordinates(), playerTank.getMotionProgress());
+        tileMovement.moveRectangleBetweenTileCenters(gdxTank.getRectangle(), playerTank.getCoordinates().toGridPoint2(),
+                playerTank.getDestCoordinates().toGridPoint2(), playerTank.getMotionProgress());
     }
 
     public void dispose(){

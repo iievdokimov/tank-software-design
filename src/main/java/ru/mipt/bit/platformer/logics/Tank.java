@@ -1,71 +1,61 @@
 package ru.mipt.bit.platformer.logics;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.util.Vector2D;
 
 
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.continueProgress;
 
 public class Tank {
-    enum Direction{
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT,
-        NULL
-    }
+    private final float motionStarted = 0f;
+    private final float motionFinished = 1f;
 
-    public static final float motionStarted = 0f;
-    public static final float motionFinished = 1f;
-
-    private float rotation;
-    private GridPoint2 coordinates;
-    private GridPoint2 destCoordinates;
+    private Direction direction;
+    private Vector2D coordinates;
+    private Vector2D destCoordinates;
 
     private float motionProgress;
 
 
-    public Tank(GridPoint2 location, float rotationAngle) {
-        coordinates = new GridPoint2(location);
-        destCoordinates = new GridPoint2(coordinates);
-        rotation = rotationAngle;
+    public Tank(Vector2D location, Direction.simpleDirection rotationAngle) {
+        coordinates = new Vector2D(location);
+        destCoordinates = new Vector2D(coordinates);
+        direction = new Direction(rotationAngle);
         motionProgress = motionFinished;
     }
 
-    public void startMotion(Direction direction) {
-        switch (direction){
-            case UP -> destCoordinates.y++;
-            case DOWN -> destCoordinates.y--;
-            case RIGHT -> destCoordinates.x++;
-            case LEFT -> destCoordinates.x--;
+    public void move(Direction direction, Level level){
+        if (isEqual(getMotionProgress(), motionFinished)) {
+            Vector2D predict = predictCoordinates(direction);
+            if (level.freeCoordinates(predict)) {
+                startMotion(direction);
+            }
+            makeTurn(direction);
         }
+
+    }
+
+
+
+    public void startMotion(Direction direction) {
+        destCoordinates = destCoordinates.add(direction.getVector());
         motionProgress = motionStarted;
     }
 
-    public GridPoint2 predictCoordinates(Direction direction) {
-        GridPoint2 predict = new GridPoint2(coordinates);
-        switch (direction){
-            case UP -> predict.y++;
-            case DOWN -> predict.y--;
-            case RIGHT -> predict.x++;
-            case LEFT -> predict.x--;
-        }
-        return predict;
+    public Vector2D predictCoordinates(Direction direction) {
+        Vector2D predict = new Vector2D(coordinates);
+        return predict.add(direction.getVector());
     }
 
     public void makeTurn(Direction direction) {
-        switch (direction){
-            case UP -> rotation = 90f;
-            case DOWN -> rotation = -90;
-            case RIGHT -> rotation = 0f;
-            case LEFT -> rotation = -180f;
-        }
+        this.direction = direction;
     }
 
     public void updateMotionProgress(float deltaTime, float motionSpeed){
         motionProgress = continueProgress(motionProgress, deltaTime, motionSpeed);
         if (isEqual(motionProgress, motionFinished)) {
-            coordinates.set(destCoordinates);
+            coordinates = destCoordinates;
             stopMotion();
         }
     }
@@ -74,11 +64,11 @@ public class Tank {
         motionProgress = motionFinished;
     }
 
-    public GridPoint2 getCoordinates() {
+    public Vector2D getCoordinates() {
         return coordinates;
     }
 
-    public GridPoint2 getDestCoordinates() {
+    public Vector2D getDestCoordinates() {
         return destCoordinates;
     }
 
@@ -87,6 +77,6 @@ public class Tank {
     }
 
     public float getRotation() {
-        return rotation;
+        return direction.getAngle();
     }
 }

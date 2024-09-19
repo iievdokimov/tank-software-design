@@ -1,33 +1,25 @@
 package ru.mipt.bit.platformer.logics;
 
 import com.badlogic.gdx.Gdx;
+import ru.mipt.bit.platformer.logics.actions.Action;
+import ru.mipt.bit.platformer.logics.actions.MoveAction;
+import ru.mipt.bit.platformer.logics.actions.NoneAction;
 
 import static com.badlogic.gdx.Input.Keys.*;
 
 public class PlayerInput {
 
-    public static class Result{
-
-        public final boolean moveKeyPressed;
-        public final Tank.Direction direction;
-
-        Result(boolean keyPressed, Tank.Direction result){
-            moveKeyPressed = keyPressed;
-            direction = result;
-        }
-    }
-
-    public static Result chooseDirection(){
+    public static Action getAction(){
         if (Gdx.input.isKeyPressed(UP) || Gdx.input.isKeyPressed(W)) {
-            return new Result(true, Tank.Direction.UP);
+            return new MoveAction(new Direction(Direction.simpleDirection.UP));
         } else if (Gdx.input.isKeyPressed(LEFT) || Gdx.input.isKeyPressed(A)) {
-            return new Result(true, Tank.Direction.LEFT);
+            return new MoveAction(new Direction(Direction.simpleDirection.LEFT));
         } else if (Gdx.input.isKeyPressed(DOWN) || Gdx.input.isKeyPressed(S)) {
-            return new Result(true, Tank.Direction.DOWN);
+            return new MoveAction(new Direction(Direction.simpleDirection.DOWN));
         } else if (Gdx.input.isKeyPressed(RIGHT) || Gdx.input.isKeyPressed(D)) {
-            return new Result(true, Tank.Direction.RIGHT);
+            return new MoveAction(new Direction(Direction.simpleDirection.RIGHT));
         }
 
-        return new Result(false, Tank.Direction.NULL);
+        return new NoneAction();
     }
 }

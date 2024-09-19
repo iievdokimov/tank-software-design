@@ -1,13 +1,14 @@
 package ru.mipt.bit.platformer.logics;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.util.Vector2D;
 
 public class Tree{
-    private final GridPoint2 coordinates;
+    private final Vector2D coordinates;
     private final float rotation;
 
-    Tree(GridPoint2 coordinates){
-        this.coordinates = new GridPoint2(coordinates);
+    Tree(Vector2D coordinates){
+        this.coordinates = new Vector2D(coordinates);
         rotation = 0f;
     }
 
@@ -15,7 +16,7 @@ public class Tree{
         return rotation;
     }
 
-    public GridPoint2 getCoordinates() {
+    public Vector2D getCoordinates() {
         return coordinates;
     }
 

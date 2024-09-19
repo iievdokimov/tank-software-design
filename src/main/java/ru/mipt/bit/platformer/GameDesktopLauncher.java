@@ -7,14 +7,12 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.math.GridPoint2;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
-import static com.badlogic.gdx.math.MathUtils.isEqual;
 
-import static ru.mipt.bit.platformer.logics.Tank.motionFinished;
 
-import ru.mipt.bit.platformer.logics.Level;
-import ru.mipt.bit.platformer.logics.PlayerInput;
-import ru.mipt.bit.platformer.logics.Tank;
-import ru.mipt.bit.platformer.logics.Tree;
+import ru.mipt.bit.platformer.logics.*;
+import ru.mipt.bit.platformer.logics.actions.Action;
+import ru.mipt.bit.platformer.logics.actions.ActionHandler;
+import ru.mipt.bit.platformer.util.Vector2D;
 import ru.mipt.bit.platformer.visuals.Drawer;
 import ru.mipt.bit.platformer.visuals.GdxDrawer;
 import ru.mipt.bit.platformer.visuals.VisualLevel;
@@ -33,19 +31,21 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     private Tank playerTank;
 
+    private ActionHandler actionHandler;
 
     @Override
     public void create() {
         // create level
-        ArrayList<GridPoint2> treeObstacleCoordinates = new ArrayList<GridPoint2>();
-        treeObstacleCoordinates.add(new GridPoint2(3, 3));
-        treeObstacleCoordinates.add(new GridPoint2(1, 3));
+        ArrayList<Vector2D> treeObstacleCoordinates = new ArrayList<Vector2D>();
+        treeObstacleCoordinates.add(new Vector2D(3, 3));
+        treeObstacleCoordinates.add(new Vector2D(1, 3));
         level = new Level(treeObstacleCoordinates);
 
         // create playerTank
-        GridPoint2 startCoordinates = new GridPoint2(1, 1);
-        float startRotation = 0f;
-        playerTank = new Tank(startCoordinates, startRotation);
+        Vector2D startCoordinates = new Vector2D(1, 1);
+        playerTank = new Tank(startCoordinates, Direction.simpleDirection.UP);
+
+        actionHandler = new ActionHandler(playerTank, level);
 
         // create visuals
         VisualObject visualTank = new VisualObject("images/tank_blue.png");
@@ -58,24 +58,14 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     @Override
     public void render() {
-        // clear the screen
-        Gdx.gl.glClearColor(0f, 0f, 0.2f, 1f);
-        Gdx.gl.glClear(GL_COLOR_BUFFER_BIT);
+        clear_screen();
 
         // get time passed since the last render
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-        PlayerInput.Result input = PlayerInput.chooseDirection();
-        if(input.moveKeyPressed){
-            if (isEqual(playerTank.getMotionProgress(), motionFinished)) {
-                GridPoint2 predict = playerTank.predictCoordinates(input.direction);
-                if (level.freeCoordinates(predict)) {
-                    playerTank.startMotion(input.direction);
-                }
 
-                playerTank.makeTurn(input.direction);
-            }
-        }
+        Action playerAction = PlayerInput.getAction();
+        actionHandler.handle(playerAction);
 
         drawer.processTankMotion(playerTank);
 
@@ -84,6 +74,11 @@ public class GameDesktopLauncher implements ApplicationListener {
         drawer.drawVisuals(level, playerTank);
 
 
+    }
+
+    private static void clear_screen() {
+        Gdx.gl.glClearColor(0f, 0f, 0.2f, 1f);
+        Gdx.gl.glClear(GL_COLOR_BUFFER_BIT);
     }
 
     @Override
