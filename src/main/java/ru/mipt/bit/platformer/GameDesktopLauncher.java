@@ -22,9 +22,6 @@ import java.util.ArrayList;
 
 public class GameDesktopLauncher implements ApplicationListener {
 
-    private static final float MOVEMENT_SPEED = 0.4f; // ?
-
-
     private Drawer drawer;
 
     private Level level;
@@ -32,6 +29,9 @@ public class GameDesktopLauncher implements ApplicationListener {
     private Tank playerTank;
 
     private ActionHandler actionHandler;
+
+    private PlayerInput inputManager;
+
 
     @Override
     public void create() {
@@ -48,7 +48,8 @@ public class GameDesktopLauncher implements ApplicationListener {
         Vector2D startCoordinates = new Vector2D(1, 1);
         playerTank = new Tank(startCoordinates, Direction.simpleDirection.UP);
 
-        actionHandler = new ActionHandler(playerTank, level);
+        //actionHandler = new ActionHandler();
+        inputManager = new PlayerInput(playerTank, level);
 
         // create visuals
         VisualObject visualTank = new VisualObject("images/tank_blue.png");
@@ -67,12 +68,12 @@ public class GameDesktopLauncher implements ApplicationListener {
         float deltaTime = Gdx.graphics.getDeltaTime();
 
 
-        Action playerAction = PlayerInput.getAction();
-        actionHandler.handle(playerAction);
+        Action playerAction = inputManager.getAction();
+        ActionHandler.handle(playerAction);
 
         drawer.processTankMotion(playerTank);
 
-        playerTank.updateMotionProgress(deltaTime, MOVEMENT_SPEED);
+        playerTank.updateMotionProgress(deltaTime);
 
         drawer.drawVisuals(level, playerTank);
 

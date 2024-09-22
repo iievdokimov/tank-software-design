@@ -17,6 +17,7 @@ public class Tank {
 
     private float motionProgress;
 
+    private static final float MOVEMENT_SPEED = 0.4f;
 
     public Tank(Vector2D location, Direction.simpleDirection rotationAngle) {
         coordinates = new Vector2D(location);
@@ -50,8 +51,8 @@ public class Tank {
         this.direction = direction;
     }
 
-    public void updateMotionProgress(float deltaTime, float motionSpeed){
-        motionProgress = continueProgress(motionProgress, deltaTime, motionSpeed);
+    public void updateMotionProgress(float deltaTime){
+        motionProgress = continueProgress(motionProgress, deltaTime, MOVEMENT_SPEED);
         if (isEqual(motionProgress, motionFinished)) {
             coordinates = destCoordinates;
             stopMotion();
