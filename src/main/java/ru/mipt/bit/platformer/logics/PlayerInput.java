@@ -1,6 +1,7 @@
 package ru.mipt.bit.platformer.logics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import ru.mipt.bit.platformer.logics.actions.Action;
 import ru.mipt.bit.platformer.logics.actions.MoveAction;
 import ru.mipt.bit.platformer.logics.actions.NoneAction;
@@ -8,24 +9,24 @@ import ru.mipt.bit.platformer.logics.actions.NoneAction;
 import static com.badlogic.gdx.Input.Keys.*;
 
 public class PlayerInput {
-    private final Tank linkPlayerTank;
-    private final Level linkLevel;
-
+//    private final Tank linkPlayerTank;
+//    private final Level linkLevel;
+    private final KeyRegister keyRegister;
 
     public PlayerInput(Tank playerTank, Level level){
-        linkPlayerTank = playerTank;
-        linkLevel = level;
+        keyRegister = new KeyRegister(level);
     }
 
     public Action getAction(){
-        if (Gdx.input.isKeyPressed(UP) || Gdx.input.isKeyPressed(W)) {
-            return new MoveAction(linkPlayerTank, Direction.UP, linkLevel);
-        } else if (Gdx.input.isKeyPressed(LEFT) || Gdx.input.isKeyPressed(A)) {
-            return new MoveAction(linkPlayerTank, Direction.LEFT, linkLevel);
-        } else if (Gdx.input.isKeyPressed(DOWN) || Gdx.input.isKeyPressed(S)) {
-            return new MoveAction(linkPlayerTank, Direction.DOWN, linkLevel);
-        } else if (Gdx.input.isKeyPressed(RIGHT) || Gdx.input.isKeyPressed(D)) {
-            return new MoveAction(linkPlayerTank, Direction.RIGHT, linkLevel);
+        Action result = null;
+        for(Integer key : keyRegister.getAllRegisteredKeys()) {
+            if (Gdx.input.isKeyPressed(key)) {
+                result = keyRegister.get(key);
+                break;
+            }
+        }
+        if(result != null){
+            return result;
         }
 
         return new NoneAction();

@@ -11,10 +11,10 @@ public class MoveAction extends Action{
 
 
 
-    public MoveAction(Tank linkTank, Direction direction, Level linkLevel){
+    public MoveAction(Tank tank, Level level, Direction direction){
         this.direction = direction;
-        tank = linkTank;
-        level = linkLevel;
+        this.tank = tank;
+        this.level = level;
     }
 
     @Override

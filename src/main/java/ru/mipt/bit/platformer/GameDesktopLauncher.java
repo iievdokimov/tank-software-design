@@ -4,14 +4,12 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.math.GridPoint2;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 
 
 import ru.mipt.bit.platformer.logics.*;
 import ru.mipt.bit.platformer.logics.actions.Action;
-import ru.mipt.bit.platformer.logics.actions.ActionHandler;
 import ru.mipt.bit.platformer.util.Vector2D;
 import ru.mipt.bit.platformer.visuals.*;
 
@@ -24,8 +22,6 @@ public class GameDesktopLauncher implements ApplicationListener {
     private Level level;
 
     private Tank playerTank;
-
-    private ActionHandler actionHandler;
 
     private PlayerInput inputManager;
 
@@ -44,7 +40,7 @@ public class GameDesktopLauncher implements ApplicationListener {
 
         Vector2D leftCorner = new Vector2D(0, 0);
         Vector2D rightCorner = new Vector2D(9, 7);
-        level = new Level(leftCorner, rightCorner, gameObjects);
+        level = new Level(leftCorner, rightCorner, gameObjects, playerTank);
 
 
         //actionHandler = new ActionHandler();
@@ -66,9 +62,8 @@ public class GameDesktopLauncher implements ApplicationListener {
         // get time passed since the last render
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-
         Action playerAction = inputManager.getAction();
-        ActionHandler.handle(playerAction);
+        playerAction.process();
 
         level.updateProgress(deltaTime);
 

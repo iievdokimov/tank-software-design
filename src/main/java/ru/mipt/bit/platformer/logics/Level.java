@@ -9,15 +9,16 @@ import java.util.List;
 
 public class Level {
     private List<GameObject> gameObjects;
-    //private Tank playerTank;
+    private Tank playerTank;
 
     private final int min_x;
     private final int min_y;
     private final int max_x;
     private final int max_y;
 
-    public Level(Vector2D leftCorner, Vector2D rightCorner, List<GameObject> gameObjects){
+    public Level(Vector2D leftCorner, Vector2D rightCorner, List<GameObject> gameObjects, Tank playerTank){
         this.gameObjects = gameObjects;
+        this.playerTank = playerTank;
         min_x = (int)leftCorner.x();
         min_y = (int)leftCorner.y();
         max_x = (int)rightCorner.x();
@@ -60,6 +61,10 @@ public class Level {
         for (GameObject gameObject : gameObjects) {
             gameObject.updateProgress(deltaTime);
         }
+    }
+
+    Tank getPlayerTank(){
+        return playerTank;
     }
 
 }
