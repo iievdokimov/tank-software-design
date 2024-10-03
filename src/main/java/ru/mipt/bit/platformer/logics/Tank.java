@@ -19,10 +19,10 @@ public class Tank implements GameObject {
 
     private static final float MOVEMENT_SPEED = 0.4f;
 
-    public Tank(Vector2D location, Direction.simpleDirection rotationAngle) {
+    public Tank(Vector2D location, Direction direction) {
         coordinates = new Vector2D(location);
         destCoordinates = new Vector2D(coordinates);
-        direction = new Direction(rotationAngle);
+        this.direction = direction;
         motionProgress = motionFinished;
     }
 

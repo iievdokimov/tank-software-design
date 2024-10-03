@@ -23,10 +23,10 @@ public class TankTest {
 
     private ArrayList<Direction> getFourDirections(){
         ArrayList<Direction> directions = new ArrayList<>();
-        directions.add(new Direction(Direction.simpleDirection.UP));
-        directions.add(new Direction(Direction.simpleDirection.DOWN));
-        directions.add(new Direction(Direction.simpleDirection.LEFT));
-        directions.add(new Direction(Direction.simpleDirection.RIGHT));
+        directions.add(Direction.UP);
+        directions.add(Direction.DOWN);
+        directions.add(Direction.LEFT);
+        directions.add(Direction.RIGHT);
         return directions;
     }
 
@@ -36,13 +36,13 @@ public class TankTest {
 
         Vector2D coordinates = getRandomVector2D(100);
         Vector2D future_coordinates = new Vector2D(coordinates.x(),coordinates.y() + 1);
-        Tank tank = new Tank(coordinates, Direction.simpleDirection.DOWN);
+        Tank tank = new Tank(coordinates, Direction.DOWN);
 
-        tank.move(new Direction(Direction.simpleDirection.UP), freeLevel);
+        tank.move(Direction.UP, freeLevel);
 
         assertEquals(tank.getDestCoordinates(), future_coordinates);
         assertEquals(tank.getCoordinates(), coordinates);
-        assertEquals(tank.getDirection(), new Direction(Direction.simpleDirection.UP));
+        assertEquals(tank.getDirection(), Direction.UP);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class TankTest {
         for (Direction direction : directions) {
             Vector2D coordinates = getRandomVector2D(100);
             Vector2D future_coordinates = coordinates.add(direction.getVector());
-            Tank tank = new Tank(coordinates, Direction.simpleDirection.DOWN);
+            Tank tank = new Tank(coordinates, Direction.DOWN);
 
             tank.move(direction, freeLevel);
 
@@ -70,9 +70,9 @@ public class TankTest {
     public void predictCoordinatesUP() {
         Vector2D coordinates = getRandomVector2D(100);
         Vector2D future_coordinates = new Vector2D(coordinates.x(), coordinates.y() + 1);
-        Tank tank = new Tank(coordinates, Direction.simpleDirection.DOWN);
+        Tank tank = new Tank(coordinates, Direction.DOWN);
 
-        Vector2D predict = tank.predictCoordinates(new Direction(Direction.simpleDirection.UP));
+        Vector2D predict = tank.predictCoordinates(Direction.UP);
 
         assertEquals(predict, future_coordinates);
     }
@@ -84,7 +84,7 @@ public class TankTest {
 
         for (Direction direction : directions) {
             Vector2D coordinates = getRandomVector2D(100);
-            Tank tank = new Tank(coordinates, Direction.simpleDirection.DOWN);
+            Tank tank = new Tank(coordinates, Direction.DOWN);
 
             tank.makeTurn(direction);
             assertEquals(tank.getDirection(), direction);

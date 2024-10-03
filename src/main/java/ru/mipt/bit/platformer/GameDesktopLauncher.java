@@ -39,7 +39,7 @@ public class GameDesktopLauncher implements ApplicationListener {
 
         // create playerTank
         Vector2D startCoordinates = new Vector2D(1, 1);
-        playerTank = new Tank(startCoordinates, Direction.simpleDirection.UP);
+        playerTank = new Tank(startCoordinates, Direction.UP);
         gameObjects.add(playerTank);
 
         Vector2D leftCorner = new Vector2D(0, 0);
