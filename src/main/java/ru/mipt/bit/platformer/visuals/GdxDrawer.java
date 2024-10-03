@@ -1,4 +1,4 @@
-package ru.mipt.bit.platformer;
+package ru.mipt.bit.platformer.visuals;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -10,6 +10,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
+import ru.mipt.bit.platformer.logics.Level;
+import ru.mipt.bit.platformer.logics.Tank;
 import ru.mipt.bit.platformer.util.TileMovement;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
@@ -25,22 +27,23 @@ public class GdxDrawer implements Drawer {
     private Batch batch;
     private static TiledMapTileLayer groundLayer;
 
-    GdxDrawer(Level level, Tank tank, VisualLevel gdxLevel, VisualObject gdxTree, VisualObject gdxTank) {
+    public GdxDrawer(Level level, Tank tank, VisualLevel gdxLevel, VisualObject gdxTree, VisualObject gdxTank) {
         this.gdxLevel = gdxLevel;
         this.gdxTank = gdxTank;
         this.gdxTree = gdxTree;
-        this.gdxTrees = new VisualObject[level.getTreeObstacles().length];
+        this.gdxTrees = new VisualObject[level.getTreeObstacles().size()];
         batch = new SpriteBatch();
         levelRenderer = createSingleLayerMapRenderer(gdxLevel.getLevelTileMap(), batch);
         groundLayer = getSingleLayer(gdxLevel.getLevelTileMap());
         tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
-        for (int i = 0; i < level.getTreeObstacles().length; i++) {
+        for (int i = 0; i < level.getTreeObstacles().size(); i++) {
             gdxTrees[i] = new VisualObject(gdxTree);
-            moveRectangleAtTileCenter(groundLayer, gdxTrees[i].getRectangle(), level.getTreeObstacles()[i].getCoordinates());
+            moveRectangleAtTileCenter(groundLayer, gdxTrees[i].getRectangle(),
+                    level.getTreeObstacles().get(i).getCoordinates().toGridPoint2());
         }
 
-        moveRectangleAtTileCenter(groundLayer, gdxTank.getRectangle(), tank.getCoordinates());
+        moveRectangleAtTileCenter(groundLayer, gdxTank.getRectangle(), tank.getCoordinates().toGridPoint2());
     }
 
 
@@ -72,8 +75,8 @@ public class GdxDrawer implements Drawer {
     @Override
     public void processTankMotion(Tank playerTank) {
         // calculate interpolated player screen coordinates
-        tileMovement.moveRectangleBetweenTileCenters(gdxTank.getRectangle(), playerTank.getCoordinates(),
-                playerTank.getDestCoordinates(), playerTank.getMotionProgress());
+        tileMovement.moveRectangleBetweenTileCenters(gdxTank.getRectangle(), playerTank.getCoordinates().toGridPoint2(),
+                playerTank.getDestCoordinates().toGridPoint2(), playerTank.getMotionProgress());
     }
 
     public void dispose(){
@@ -90,57 +93,6 @@ public class GdxDrawer implements Drawer {
         gdxLevel.dispose();
 
         batch.dispose();
-    }
-
-    public static class VisualLevel{
-        private final TiledMap levelTileMap;
-
-        VisualLevel(String levelTilePath) {
-            levelTileMap = new TmxMapLoader().load(levelTilePath);
-        }
-
-        public TiledMap getLevelTileMap() {
-            return levelTileMap;
-        }
-
-        void dispose() {
-            levelTileMap.dispose();
-        }
-
-    }
-
-    public static class VisualObject{
-        private final Texture texture;
-        private final TextureRegion graphics;
-        private final Rectangle rectangle;
-        private final String texturePath;
-
-        VisualObject(String texturePath) {
-            texture = new Texture(texturePath);
-            graphics = new TextureRegion(texture);
-            rectangle = createBoundingRectangle(graphics);
-
-            this.texturePath = texturePath;
-        }
-
-        VisualObject(VisualObject deepCopy){
-            texture = new Texture(deepCopy.texturePath);
-            graphics = new TextureRegion(texture);
-            rectangle = createBoundingRectangle(graphics);
-            this.texturePath = deepCopy.texturePath;
-        }
-
-        public Rectangle getRectangle() {
-            return rectangle;
-        }
-
-        public TextureRegion getGraphics() {
-            return graphics;
-        }
-
-        public void dispose(){
-            texture.dispose();
-        }
     }
 
 }
