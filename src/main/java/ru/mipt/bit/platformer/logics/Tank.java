@@ -7,7 +7,7 @@ import ru.mipt.bit.platformer.util.Vector2D;
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.continueProgress;
 
-public class Tank {
+public class Tank implements GameObject {
     private final float motionStarted = 0f;
     private final float motionFinished = 1f;
 
@@ -51,7 +51,7 @@ public class Tank {
         this.direction = direction;
     }
 
-    public void updateMotionProgress(float deltaTime){
+    private void updateMotionProgress(float deltaTime){
         motionProgress = continueProgress(motionProgress, deltaTime, MOVEMENT_SPEED);
         if (isEqual(motionProgress, motionFinished)) {
             coordinates = destCoordinates;
@@ -73,6 +73,11 @@ public class Tank {
 
     public float getMotionProgress() {
         return motionProgress;
+    }
+
+    @Override
+    public void updateProgress(float deltaTime) {
+        updateMotionProgress(deltaTime);
     }
 
     public float getRotation() {

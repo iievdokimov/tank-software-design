@@ -1,6 +1,6 @@
 package ru.mipt.bit.platformer.logics.tests;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 import ru.mipt.bit.platformer.logics.Direction;
 import ru.mipt.bit.platformer.util.Vector2D;
 

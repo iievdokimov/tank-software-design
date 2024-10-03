@@ -1,14 +1,17 @@
 package ru.mipt.bit.platformer.logics.tests;
 
-import org.junit.Test;
 import ru.mipt.bit.platformer.logics.Direction;
 import ru.mipt.bit.platformer.logics.Level;
 import ru.mipt.bit.platformer.logics.Tank;
 import ru.mipt.bit.platformer.util.Vector2D;
 
+import org.junit.jupiter.api.Test; // JUnit 5 import
+import ru.mipt.bit.platformer.logics.Level;
+import ru.mipt.bit.platformer.util.Vector2D;
+
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TankTest {
     private Vector2D getRandomVector2D(int max_value){

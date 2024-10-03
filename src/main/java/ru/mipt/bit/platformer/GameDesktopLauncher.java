@@ -13,10 +13,7 @@ import ru.mipt.bit.platformer.logics.*;
 import ru.mipt.bit.platformer.logics.actions.Action;
 import ru.mipt.bit.platformer.logics.actions.ActionHandler;
 import ru.mipt.bit.platformer.util.Vector2D;
-import ru.mipt.bit.platformer.visuals.Drawer;
-import ru.mipt.bit.platformer.visuals.GdxDrawer;
-import ru.mipt.bit.platformer.visuals.VisualLevel;
-import ru.mipt.bit.platformer.visuals.VisualObject;
+import ru.mipt.bit.platformer.visuals.*;
 
 import java.util.ArrayList;
 
@@ -35,29 +32,31 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     @Override
     public void create() {
-        // create level
-        ArrayList<Vector2D> treeObstacleCoordinates = new ArrayList<Vector2D>();
-        treeObstacleCoordinates.add(new Vector2D(3, 3));
-        treeObstacleCoordinates.add(new Vector2D(1, 3));
-
-        Vector2D leftCorner = new Vector2D(0, 0);
-        Vector2D rightCorner = new Vector2D(9, 7);
-        level = new Level(leftCorner, rightCorner, treeObstacleCoordinates);
+        // create game objects
+        ArrayList<GameObject> gameObjects = new ArrayList<>();
+        gameObjects.add(new Tree(new Vector2D(3, 3)));
+        gameObjects.add(new Tree(new Vector2D(1, 3)));
 
         // create playerTank
         Vector2D startCoordinates = new Vector2D(1, 1);
         playerTank = new Tank(startCoordinates, Direction.simpleDirection.UP);
+        gameObjects.add(playerTank);
+
+        Vector2D leftCorner = new Vector2D(0, 0);
+        Vector2D rightCorner = new Vector2D(9, 7);
+        level = new Level(leftCorner, rightCorner, gameObjects);
+
 
         //actionHandler = new ActionHandler();
         inputManager = new PlayerInput(playerTank, level);
 
         // create visuals
-        VisualObject visualTank = new VisualObject("images/tank_blue.png");
-        VisualObject visualTree = new VisualObject("images/greenTree.png");
+        VisualTank visualTank = new VisualTank("images/tank_blue.png", playerTank);
+        VisualTree visualTree = new VisualTree("images/greenTree.png", new Tree(new Vector2D()));
         VisualLevel visualLevel = new VisualLevel("level.tmx");
 
         // create drawer
-        drawer = new GdxDrawer(level, playerTank, visualLevel, visualTree, visualTank);
+        drawer = new GdxDrawer(level, visualLevel, visualTree, visualTank);
     }
 
     @Override
@@ -71,11 +70,9 @@ public class GameDesktopLauncher implements ApplicationListener {
         Action playerAction = inputManager.getAction();
         ActionHandler.handle(playerAction);
 
-        drawer.processTankMotion(playerTank);
+        level.updateProgress(deltaTime);
 
-        playerTank.updateMotionProgress(deltaTime);
-
-        drawer.drawVisuals(level, playerTank);
+        drawer.drawVisuals(level);
 
 
     }
