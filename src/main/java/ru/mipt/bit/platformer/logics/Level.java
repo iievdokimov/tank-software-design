@@ -8,21 +8,17 @@ import java.util.List;
 
 
 public class Level {
-    private List<Tree> treeObstacles;
+    private List<GameObject> gameObjects;
+    private Tank playerTank;
 
     private final int min_x;
     private final int min_y;
     private final int max_x;
     private final int max_y;
 
-    public Level(Vector2D leftCorner, Vector2D rightCorner, List<Vector2D> obstCoordinates){
-//        treeObstacles = new ArrayList<>();
-        treeObstacles = new ArrayList<>(obstCoordinates.size());
-        for (int i = 0; i < obstCoordinates.size(); i++) {
-            treeObstacles.add(new Tree(obstCoordinates.get(i)));
-
-        }
-
+    public Level(Vector2D leftCorner, Vector2D rightCorner, List<GameObject> gameObjects, Tank playerTank){
+        this.gameObjects = gameObjects;
+        this.playerTank = playerTank;
         min_x = (int)leftCorner.x();
         min_y = (int)leftCorner.y();
         max_x = (int)rightCorner.x();
@@ -31,7 +27,7 @@ public class Level {
     }
 
     public Level(){
-        treeObstacles = new ArrayList<>();
+        gameObjects = new ArrayList<>();
         min_x = Integer.MIN_VALUE;
         min_y = Integer.MIN_VALUE;
         max_x = Integer.MAX_VALUE;
@@ -39,8 +35,8 @@ public class Level {
     }
 
 
-    public List<Tree> getTreeObstacles() {
-        return treeObstacles;
+    public List<GameObject> getObjects(){
+        return gameObjects;
     }
 
     public boolean freeCoordinates(Vector2D coordinates) {
@@ -50,7 +46,9 @@ public class Level {
         }
 
         boolean free = true;
-        for (Tree obst : treeObstacles) {
+        // now check all objects for collision (even player tank)
+        // maybe will be changed
+        for (GameObject obst : gameObjects) {
             if(obst.getCoordinates().equals(coordinates)){
                 free = false;
                 break;
@@ -59,6 +57,14 @@ public class Level {
         return free;
     }
 
+    public void updateProgress(float deltaTime){
+        for (GameObject gameObject : gameObjects) {
+            gameObject.updateProgress(deltaTime);
+        }
+    }
 
+    Tank getPlayerTank(){
+        return playerTank;
+    }
 
 }

@@ -1,41 +1,25 @@
 package ru.mipt.bit.platformer.visuals;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import ru.mipt.bit.platformer.logics.GameObject;
+import ru.mipt.bit.platformer.util.TileMovement;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.createBoundingRectangle;
 
-public class VisualObject{
-    private final Texture texture;
-    private final TextureRegion graphics;
-    private final Rectangle rectangle;
-    private final String texturePath;
+public interface VisualObject{
+    Rectangle getRectangle();
 
-    public VisualObject(String texturePath) {
-        texture = new Texture(texturePath);
-        graphics = new TextureRegion(texture);
-        rectangle = createBoundingRectangle(graphics);
+    TextureRegion getGraphics();
 
-        this.texturePath = texturePath;
-    }
+    float getRotation();
 
-    VisualObject(VisualObject deepCopy){
-        texture = new Texture(deepCopy.texturePath);
-        graphics = new TextureRegion(texture);
-        rectangle = createBoundingRectangle(graphics);
-        this.texturePath = deepCopy.texturePath;
-    }
+    void draw(Batch batch);
 
-    public Rectangle getRectangle() {
-        return rectangle;
-    }
+    void dispose();
 
-    public TextureRegion getGraphics() {
-        return graphics;
-    }
+    void processMotion(TileMovement tileMovement);
 
-    public void dispose(){
-        texture.dispose();
-    }
 }

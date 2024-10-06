@@ -4,19 +4,16 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.math.GridPoint2;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 
 
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import ru.mipt.bit.platformer.logics.*;
 import ru.mipt.bit.platformer.logics.actions.Action;
-import ru.mipt.bit.platformer.logics.actions.ActionHandler;
 import ru.mipt.bit.platformer.util.Vector2D;
-import ru.mipt.bit.platformer.visuals.Drawer;
-import ru.mipt.bit.platformer.visuals.GdxDrawer;
-import ru.mipt.bit.platformer.visuals.VisualLevel;
-import ru.mipt.bit.platformer.visuals.VisualObject;
+import ru.mipt.bit.platformer.visuals.*;
 
 import java.util.ArrayList;
 
@@ -28,36 +25,36 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     private Tank playerTank;
 
-    private ActionHandler actionHandler;
-
     private PlayerInput inputManager;
 
 
     @Override
     public void create() {
-        // create level
-        ArrayList<Vector2D> treeObstacleCoordinates = new ArrayList<Vector2D>();
-        treeObstacleCoordinates.add(new Vector2D(3, 3));
-        treeObstacleCoordinates.add(new Vector2D(1, 3));
-
-        Vector2D leftCorner = new Vector2D(0, 0);
-        Vector2D rightCorner = new Vector2D(9, 7);
-        level = new Level(leftCorner, rightCorner, treeObstacleCoordinates);
+        // create game objects
+        ArrayList<GameObject> gameObjects = new ArrayList<>();
+        gameObjects.add(new Tree(new Vector2D(3, 3)));
+        gameObjects.add(new Tree(new Vector2D(1, 3)));
 
         // create playerTank
         Vector2D startCoordinates = new Vector2D(1, 1);
-        playerTank = new Tank(startCoordinates, Direction.simpleDirection.UP);
+        playerTank = new Tank(startCoordinates, Direction.UP);
+        gameObjects.add(playerTank);
+
+        Vector2D leftCorner = new Vector2D(0, 0);
+        Vector2D rightCorner = new Vector2D(9, 7);
+        level = new Level(leftCorner, rightCorner, gameObjects, playerTank);
+
 
         //actionHandler = new ActionHandler();
-        inputManager = new PlayerInput(playerTank, level);
+        inputManager = new PlayerInput(level);
 
         // create visuals
-        VisualObject visualTank = new VisualObject("images/tank_blue.png");
-        VisualObject visualTree = new VisualObject("images/greenTree.png");
-        VisualLevel visualLevel = new VisualLevel("level.tmx");
+        VisualTank visualTank = new VisualTank("images/tank_blue.png", playerTank);
+        VisualTree visualTree = new VisualTree("images/greenTree.png", new Tree(new Vector2D()));
+        TiledMap levelTileMap = new TmxMapLoader().load("level.tmx");
 
         // create drawer
-        drawer = new GdxDrawer(level, playerTank, visualLevel, visualTree, visualTank);
+        drawer = new GdxDrawer(level, levelTileMap, visualTree, visualTank);
     }
 
     @Override
@@ -67,15 +64,12 @@ public class GameDesktopLauncher implements ApplicationListener {
         // get time passed since the last render
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-
         Action playerAction = inputManager.getAction();
-        ActionHandler.handle(playerAction);
+        playerAction.process();
 
-        drawer.processTankMotion(playerTank);
+        level.updateProgress(deltaTime);
 
-        playerTank.updateMotionProgress(deltaTime);
-
-        drawer.drawVisuals(level, playerTank);
+        drawer.drawVisuals(level);
 
 
     }

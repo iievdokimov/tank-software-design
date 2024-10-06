@@ -1,24 +1,24 @@
 package ru.mipt.bit.platformer.logics.tests;
 
-import org.junit.Test;
-import ru.mipt.bit.platformer.logics.Level;
+import org.junit.jupiter.api.Test; // JUnit 5 import
+import ru.mipt.bit.platformer.logics.*;
 import ru.mipt.bit.platformer.util.Vector2D;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LevelTest {
 
     @Test
     public void freeCoordinatesObst() {
-        ArrayList<Vector2D> treesCoordinates = new ArrayList<>();
         Vector2D obstCoordinate = new Vector2D(1, 1);
-        treesCoordinates.add(obstCoordinate);
+        ArrayList<GameObject> gameObjects = new ArrayList<>();
+        gameObjects.add(new Tree(obstCoordinate));
 
         Vector2D leftCorner = new Vector2D(0, 0);
         Vector2D rightCorner = new Vector2D(10, 10);
-        Level level = new Level(leftCorner, rightCorner, treesCoordinates);
+        Level level = new Level(leftCorner, rightCorner, gameObjects, new Tank(new Vector2D(-1, -1), Direction.RIGHT));
 
         Vector2D freePosition = new Vector2D(5, 6);
         Vector2D busyPosition = obstCoordinate;
@@ -29,7 +29,7 @@ public class LevelTest {
 
     @Test
     public void freeCoordinatesBoarders() {
-        ArrayList<Vector2D> treesCoordinates = new ArrayList<>();
+        ArrayList<GameObject> gameObjects = new ArrayList<>();
 
         int min_x = 0;
         int min_y = 0;
@@ -38,7 +38,7 @@ public class LevelTest {
 
         Vector2D leftCorner = new Vector2D(min_x, min_y);
         Vector2D rightCorner = new Vector2D(max_x, max_y);
-        Level level = new Level(leftCorner, rightCorner, treesCoordinates);
+        Level level = new Level(leftCorner, rightCorner, gameObjects,new Tank(new Vector2D(-2, -2), Direction.RIGHT));
 
         Vector2D freePosition = new Vector2D(getRandomNumber(min_x, max_x), getRandomNumber(min_y, max_y));
         Vector2D freePositionEdge = new Vector2D(min_x, getRandomNumber(min_y, max_y));

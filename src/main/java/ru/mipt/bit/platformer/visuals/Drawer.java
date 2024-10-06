@@ -5,10 +5,7 @@ import ru.mipt.bit.platformer.logics.Tank;
 
 public interface Drawer {
     // render visuals
-    void drawVisuals(Level level, Tank tank);
-
-    // calculate interpolated player screen coordinates
-    void processTankMotion(Tank tank);
+    void drawVisuals(Level level);
 
     void dispose();
 }
