@@ -21,13 +21,6 @@ public enum Direction {
         this.vector = vector;
     }
 
-    public enum simpleDirection{
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
-    }
-
 
     public Vector2D getVector(){
         return vector;

@@ -13,7 +13,7 @@ public class PlayerInput {
 //    private final Level linkLevel;
     private final KeyRegister keyRegister;
 
-    public PlayerInput(Tank playerTank, Level level){
+    public PlayerInput(Level level){
         keyRegister = new KeyRegister(level);
     }
 

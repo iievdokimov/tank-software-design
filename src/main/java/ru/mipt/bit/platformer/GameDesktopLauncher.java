@@ -8,6 +8,8 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 
 
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import ru.mipt.bit.platformer.logics.*;
 import ru.mipt.bit.platformer.logics.actions.Action;
 import ru.mipt.bit.platformer.util.Vector2D;
@@ -44,15 +46,15 @@ public class GameDesktopLauncher implements ApplicationListener {
 
 
         //actionHandler = new ActionHandler();
-        inputManager = new PlayerInput(playerTank, level);
+        inputManager = new PlayerInput(level);
 
         // create visuals
         VisualTank visualTank = new VisualTank("images/tank_blue.png", playerTank);
         VisualTree visualTree = new VisualTree("images/greenTree.png", new Tree(new Vector2D()));
-        VisualLevel visualLevel = new VisualLevel("level.tmx");
+        TiledMap levelTileMap = new TmxMapLoader().load("level.tmx");
 
         // create drawer
-        drawer = new GdxDrawer(level, visualLevel, visualTree, visualTank);
+        drawer = new GdxDrawer(level, levelTileMap, visualTree, visualTank);
     }
 
     @Override

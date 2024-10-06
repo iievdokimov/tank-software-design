@@ -22,7 +22,7 @@ import java.util.List;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class GdxDrawer implements Drawer {
-    private VisualLevel gdxLevel;
+    private TiledMap gdxLevel;
     //private VisualObject gdxTank;
     //private VisualObject gdxTree;
     private ArrayList<VisualObject> visualObjects;
@@ -32,14 +32,14 @@ public class GdxDrawer implements Drawer {
     private Batch batch;
     private static TiledMapTileLayer groundLayer;
 
-    public GdxDrawer(Level level, VisualLevel gdxLevel, VisualTree gdxTree, VisualTank gdxTank) {
+    public GdxDrawer(Level level, TiledMap gdxLevel, VisualTree gdxTree, VisualTank gdxTank) {
         this.gdxLevel = gdxLevel;
         //this.gdxTank = gdxTank;
         //this.gdxTree = gdxTree;
         visualObjects = new ArrayList<>();
         batch = new SpriteBatch();
-        levelRenderer = createSingleLayerMapRenderer(gdxLevel.getLevelTileMap(), batch);
-        groundLayer = getSingleLayer(gdxLevel.getLevelTileMap());
+        levelRenderer = createSingleLayerMapRenderer(gdxLevel, batch);
+        groundLayer = getSingleLayer(gdxLevel);
         tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
 
