@@ -12,12 +12,8 @@ import java.util.Set;
 import static com.badlogic.gdx.Input.Keys.*;
 import static com.badlogic.gdx.Input.Keys.D;
 
-public class KeyRegister {
-    private final HashMap<Integer, Action> keyAction;
-
-    public KeyRegister(Level level) {
-        keyAction = new HashMap<>();
-
+public class KeyTools {
+    public static void registerKeys(HashMap<Integer, Action> keyAction, Level level) {
         keyAction.put(UP, new MoveAction(level.getPlayerTank(), level, Direction.UP));
         keyAction.put(W, new MoveAction(level.getPlayerTank(), level, Direction.UP));
         keyAction.put(LEFT, new MoveAction(level.getPlayerTank(), level, Direction.LEFT));
@@ -27,13 +23,5 @@ public class KeyRegister {
         keyAction.put(RIGHT, new MoveAction(level.getPlayerTank(), level, Direction.RIGHT));
         keyAction.put(D, new MoveAction(level.getPlayerTank(), level, Direction.RIGHT));
 
-    }
-
-    public Action get(Integer key){
-        return keyAction.get(key);
-    }
-
-    public Set<Integer> getAllRegisteredKeys(){
-        return keyAction.keySet();
     }
 }
