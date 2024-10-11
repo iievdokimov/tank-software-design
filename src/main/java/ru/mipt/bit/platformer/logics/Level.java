@@ -63,7 +63,7 @@ public class Level {
         }
     }
 
-    Tank getPlayerTank(){
+    public Tank getPlayerTank(){
         return playerTank;
     }
 
