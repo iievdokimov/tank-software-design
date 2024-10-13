@@ -12,7 +12,11 @@ import ru.mipt.bit.platformer.logics.*;
 import ru.mipt.bit.platformer.logics.actions.Action;
 import ru.mipt.bit.platformer.logics.level_setup.FileLevelSetup;
 import ru.mipt.bit.platformer.logics.level_setup.LevelSetup;
+import ru.mipt.bit.platformer.logics.level_setup.RandomLevelSetup;
 import ru.mipt.bit.platformer.visuals.*;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class GameDesktopLauncher implements ApplicationListener {
 
@@ -25,8 +29,9 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     @Override
     public void create() {
-
-        LevelSetup levelSetup = new FileLevelSetup("./resorces/level1.txt");
+        LevelSetup levelSetup = new FileLevelSetup(
+                "C:\\Users\\Илья\\Desktop\\sber\\java_lectures\\homeworks\\tank-software-design\\src\\main\\resources\\levels\\level1.txt");
+        //LevelSetup levelSetup = new RandomLevelSetup();
         level = levelSetup.getLevel();
 
         //actionHandler = new ActionHandler();

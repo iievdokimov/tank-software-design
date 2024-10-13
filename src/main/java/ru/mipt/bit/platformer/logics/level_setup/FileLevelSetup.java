@@ -3,10 +3,19 @@ package ru.mipt.bit.platformer.logics.level_setup;
 import ru.mipt.bit.platformer.logics.*;
 import ru.mipt.bit.platformer.util.Vector2D;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.nio.file.Files;
+
 
 public class FileLevelSetup implements LevelSetup {
     private Level level;
+    private final Character treeChar = 'T';
+    private final Character playerChar = 'X';
+    private Tank playerTank = null;
 
     public FileLevelSetup(String filePath){
         level = configureFromFile(filePath);
@@ -17,21 +26,54 @@ public class FileLevelSetup implements LevelSetup {
     }
 
     public Level configureFromFile(String filePath){
-        // create game objects
+        ArrayList<String> levelLines = readLevel(filePath);
+
+
         ArrayList<GameObject> gameObjects = new ArrayList<>();
-        gameObjects.add(new Tree(new Vector2D(3, 3)));
-        gameObjects.add(new Tree(new Vector2D(1, 3)));
-
-        // create playerTank
-        Vector2D startCoordinates = new Vector2D(1, 1);
-        Tank playerTank = new Tank(startCoordinates, Direction.UP);
-        gameObjects.add(playerTank);
-
+        //Tank playerTank = null;
+        parseLevelLines(gameObjects, levelLines);
         Vector2D leftCorner = new Vector2D(0, 0);
-        Vector2D rightCorner = new Vector2D(9, 7);
+        Vector2D rightCorner = getRightCorner(levelLines);
+
         level = new Level(leftCorner, rightCorner, gameObjects, playerTank);
 
         return level;
     }
 
+    private Vector2D getRightCorner(ArrayList<String> levelLines) {
+        return new Vector2D(levelLines.size(), levelLines.getFirst().length());
+    }
+
+    private void parseLevelLines(ArrayList<GameObject> gameObjects, ArrayList<String> levelLines) {
+        Vector2D rightCorner = getRightCorner(levelLines);
+        for (int i = 0; i < levelLines.size(); i++) {
+            for (int j = 0; j < levelLines.get(i).length(); j++) {
+                Character c = levelLines.get(i).charAt(j);
+                Vector2D coord = new Vector2D(i, (int)rightCorner.y() - j);
+                if(c == treeChar){
+                    gameObjects.add(new Tree(coord));
+                } else if (c == playerChar) {
+                    playerTank = new Tank(coord, Direction.UP);
+                    gameObjects.add(playerTank);
+                }
+            }
+
+        }
+    }
+
+    private ArrayList<String> readLevel(String filePath) {
+        try(BufferedReader reader = Files.newBufferedReader(Paths.get(filePath)))
+        {
+            ArrayList<String> result = new ArrayList<>();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.add(line);
+            }
+            return result;
+        }
+        catch(IOException ex) {
+            ex.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
 }

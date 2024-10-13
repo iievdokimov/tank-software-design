@@ -3,27 +3,52 @@ package ru.mipt.bit.platformer.logics.level_setup;
 import ru.mipt.bit.platformer.logics.*;
 import ru.mipt.bit.platformer.util.Vector2D;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class RandomLevelSetup implements LevelSetup {
     private Level level;
+    private final Vector2D leftCorner = new Vector2D(0, 0);
+    private final Vector2D rightCorner = new Vector2D(9, 7);
+    private final float obstDensity = 0.4f;
 
     public RandomLevelSetup(){
+        level = configureRandomLevel();
+    }
+
+    private Level configureRandomLevel(){
         // create game objects
         ArrayList<GameObject> gameObjects = new ArrayList<>();
-        gameObjects.add(new Tree(new Vector2D(3, 3)));
-        gameObjects.add(new Tree(new Vector2D(1, 3)));
+        Tank playerTank = createPlayerTank(gameObjects);
 
-        // create playerTank
-        Vector2D startCoordinates = new Vector2D(1, 1);
+        //ArrayList<Vector2D> nonemptyCoordinates = new ArrayList<>(List.of(playerTank.getCoordinates()));
+        HashSet<Vector2D> nonemptyCoordinates = new HashSet<>();
+        nonemptyCoordinates.add(playerTank.getCoordinates());
+
+        createTrees(gameObjects, nonemptyCoordinates);
+
+
+        level = new Level(leftCorner, rightCorner, gameObjects, playerTank);
+        return level;
+    }
+
+    private void createTrees(ArrayList<GameObject> gameObjects, HashSet<Vector2D> nonemptyCoordinates){
+        for (int x = 0; x <= rightCorner.x(); x++) {
+            for (int y = 0; y <= rightCorner.y(); y++) {
+                double coin = Math.random();
+                if(coin <= obstDensity && !(nonemptyCoordinates.contains(new Vector2D(x, y)))){
+                    gameObjects.add(new Tree(new Vector2D(x, y)));
+                }
+            }
+        }
+    }
+
+    private Tank createPlayerTank(ArrayList<GameObject> gameObjects){
+        int x = (int)(Math.random() * rightCorner.x());
+        int y = (int)(Math.random() * rightCorner.y());
+        Vector2D startCoordinates = new Vector2D(x, y);
         Tank playerTank = new Tank(startCoordinates, Direction.UP);
         gameObjects.add(playerTank);
-
-        Vector2D leftCorner = new Vector2D(0, 0);
-        Vector2D rightCorner = new Vector2D(9, 7);
-        level = new Level(leftCorner, rightCorner, gameObjects, playerTank);
-
-        return level;
+        return playerTank;
     }
 
     @Override
