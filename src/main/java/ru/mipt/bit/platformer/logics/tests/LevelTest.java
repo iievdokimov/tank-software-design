@@ -1,7 +1,7 @@
 package ru.mipt.bit.platformer.logics.tests;
 
 import org.junit.jupiter.api.Test; // JUnit 5 import
-import ru.mipt.bit.platformer.logics.*;
+import ru.mipt.bit.platformer.logics.models.*;
 import ru.mipt.bit.platformer.util.Vector2D;
 
 import java.util.ArrayList;

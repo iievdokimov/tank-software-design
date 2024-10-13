@@ -1,10 +1,9 @@
 package ru.mipt.bit.platformer.logics.level_setup;
 
-import ru.mipt.bit.platformer.logics.*;
+import ru.mipt.bit.platformer.logics.models.*;
 import ru.mipt.bit.platformer.util.Vector2D;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class FileLevelSetup implements LevelSetup {
     }
 
     private Vector2D getRightCorner(ArrayList<String> levelLines) {
-        return new Vector2D(levelLines.size(), levelLines.getFirst().length());
+        return new Vector2D(levelLines.getFirst().length(), levelLines.size());
     }
 
     private void parseLevelLines(ArrayList<GameObject> gameObjects, ArrayList<String> levelLines) {
@@ -49,7 +48,7 @@ public class FileLevelSetup implements LevelSetup {
         for (int i = 0; i < levelLines.size(); i++) {
             for (int j = 0; j < levelLines.get(i).length(); j++) {
                 Character c = levelLines.get(i).charAt(j);
-                Vector2D coord = new Vector2D(i, (int)rightCorner.y() - j);
+                Vector2D coord = new Vector2D(j, (int)rightCorner.y() - i);
                 if(c == treeChar){
                     gameObjects.add(new Tree(coord));
                 } else if (c == playerChar) {

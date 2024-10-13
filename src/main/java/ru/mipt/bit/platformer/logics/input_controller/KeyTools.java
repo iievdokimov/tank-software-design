@@ -1,13 +1,11 @@
-package ru.mipt.bit.platformer.logics;
+package ru.mipt.bit.platformer.logics.input_controller;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import ru.mipt.bit.platformer.logics.actions.Action;
 import ru.mipt.bit.platformer.logics.actions.MoveAction;
+import ru.mipt.bit.platformer.logics.models.Direction;
+import ru.mipt.bit.platformer.logics.models.Level;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
 
 import static com.badlogic.gdx.Input.Keys.*;
 import static com.badlogic.gdx.Input.Keys.D;

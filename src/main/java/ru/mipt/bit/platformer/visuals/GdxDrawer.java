@@ -1,24 +1,20 @@
 package ru.mipt.bit.platformer.visuals;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Rectangle;
-import ru.mipt.bit.platformer.logics.GameObject;
-import ru.mipt.bit.platformer.logics.Level;
-import ru.mipt.bit.platformer.logics.Tank;
-import ru.mipt.bit.platformer.logics.Tree;
+import ru.mipt.bit.platformer.logics.models.GameObject;
+import ru.mipt.bit.platformer.logics.models.Level;
+import ru.mipt.bit.platformer.logics.models.Tank;
+import ru.mipt.bit.platformer.logics.models.Tree;
 import ru.mipt.bit.platformer.util.TileMovement;
 import ru.mipt.bit.platformer.util.Vector2D;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 

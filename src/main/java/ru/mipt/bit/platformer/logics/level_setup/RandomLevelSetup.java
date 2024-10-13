@@ -1,6 +1,6 @@
 package ru.mipt.bit.platformer.logics.level_setup;
 
-import ru.mipt.bit.platformer.logics.*;
+import ru.mipt.bit.platformer.logics.models.*;
 import ru.mipt.bit.platformer.util.Vector2D;
 
 import java.util.*;

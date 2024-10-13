@@ -8,15 +8,15 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 
 
-import ru.mipt.bit.platformer.logics.*;
+import ru.mipt.bit.platformer.logics.ActionGenerator;
 import ru.mipt.bit.platformer.logics.actions.Action;
+import ru.mipt.bit.platformer.logics.input_controller.PlayerInput;
 import ru.mipt.bit.platformer.logics.level_setup.FileLevelSetup;
 import ru.mipt.bit.platformer.logics.level_setup.LevelSetup;
-import ru.mipt.bit.platformer.logics.level_setup.RandomLevelSetup;
+import ru.mipt.bit.platformer.logics.models.Level;
 import ru.mipt.bit.platformer.visuals.*;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Collection;
 
 public class GameDesktopLauncher implements ApplicationListener {
 
@@ -24,20 +24,18 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     private Level level;
 
-    private PlayerInput inputManager;
+    private ActionGenerator actionGenerator;
 
 
     @Override
     public void create() {
         LevelSetup levelSetup = new FileLevelSetup(
-                "C:\\Users\\Илья\\Desktop\\sber\\java_lectures\\homeworks\\tank-software-design\\src\\main\\resources\\levels\\level1.txt");
+                "src/main/resources/levels/level1.txt");
         //LevelSetup levelSetup = new RandomLevelSetup();
         level = levelSetup.getLevel();
 
-        //actionHandler = new ActionHandler();
-        inputManager = new PlayerInput(level);
+        actionGenerator = new ActionGenerator(level);
 
-        // create drawer
         drawer = new GdxDrawer(level);
     }
 
@@ -45,16 +43,12 @@ public class GameDesktopLauncher implements ApplicationListener {
     public void render() {
         clear_screen();
 
-        // get time passed since the last render
-        float deltaTime = Gdx.graphics.getDeltaTime();
+        Collection<Action> actions = actionGenerator.generate();
+        actions.forEach(Action::process);
 
-        Action playerAction = inputManager.getAction();
-        playerAction.process();
-
-        level.updateProgress(deltaTime);
+        level.updateProgress(Gdx.graphics.getDeltaTime());
 
         drawer.drawVisuals(level);
-
 
     }
 

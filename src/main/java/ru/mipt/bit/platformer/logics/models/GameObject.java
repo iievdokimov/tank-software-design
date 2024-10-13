@@ -1,4 +1,4 @@
-package ru.mipt.bit.platformer.logics;
+package ru.mipt.bit.platformer.logics.models;
 
 import ru.mipt.bit.platformer.util.Vector2D;
 

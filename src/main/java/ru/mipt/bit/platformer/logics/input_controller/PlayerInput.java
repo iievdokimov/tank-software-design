@@ -1,14 +1,11 @@
-package ru.mipt.bit.platformer.logics;
+package ru.mipt.bit.platformer.logics.input_controller;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import ru.mipt.bit.platformer.logics.actions.Action;
-import ru.mipt.bit.platformer.logics.actions.MoveAction;
 import ru.mipt.bit.platformer.logics.actions.NoneAction;
+import ru.mipt.bit.platformer.logics.models.Level;
 
 import java.util.HashMap;
-
-import static com.badlogic.gdx.Input.Keys.*;
 
 public class PlayerInput {
     private final HashMap<Integer, Action> keyRegister;

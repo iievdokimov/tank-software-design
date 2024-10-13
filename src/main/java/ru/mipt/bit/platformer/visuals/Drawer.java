@@ -1,7 +1,6 @@
 package ru.mipt.bit.platformer.visuals;
 
-import ru.mipt.bit.platformer.logics.Level;
-import ru.mipt.bit.platformer.logics.Tank;
+import ru.mipt.bit.platformer.logics.models.Level;
 
 public interface Drawer {
     // render visuals

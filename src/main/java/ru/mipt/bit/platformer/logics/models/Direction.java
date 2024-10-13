@@ -1,9 +1,6 @@
-package ru.mipt.bit.platformer.logics;
+package ru.mipt.bit.platformer.logics.models;
 
-import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.util.Vector2D;
-
-import java.util.Objects;
 
 public enum Direction {
 
