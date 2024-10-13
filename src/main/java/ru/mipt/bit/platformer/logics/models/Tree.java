@@ -1,15 +1,18 @@
-package ru.mipt.bit.platformer.logics;
+package ru.mipt.bit.platformer.logics.models;
 
-import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.util.Vector2D;
 
-public class Tree{
+public class Tree implements GameObject{
     private final Vector2D coordinates;
     private final float rotation;
 
-    Tree(Vector2D coordinates){
+    public Tree(Vector2D coordinates){
         this.coordinates = new Vector2D(coordinates);
         rotation = 0f;
+    }
+
+    public void updateProgress(float deltaTime) {
+        // idle
     }
 
     public float getRotation() {

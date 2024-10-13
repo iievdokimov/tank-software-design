@@ -4,21 +4,19 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.math.GridPoint2;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 
 
-import ru.mipt.bit.platformer.logics.*;
+import ru.mipt.bit.platformer.logics.ActionGenerator;
 import ru.mipt.bit.platformer.logics.actions.Action;
-import ru.mipt.bit.platformer.logics.actions.ActionHandler;
-import ru.mipt.bit.platformer.util.Vector2D;
-import ru.mipt.bit.platformer.visuals.Drawer;
-import ru.mipt.bit.platformer.visuals.GdxDrawer;
-import ru.mipt.bit.platformer.visuals.VisualLevel;
-import ru.mipt.bit.platformer.visuals.VisualObject;
+import ru.mipt.bit.platformer.logics.input_controller.PlayerInput;
+import ru.mipt.bit.platformer.logics.level_setup.FileLevelSetup;
+import ru.mipt.bit.platformer.logics.level_setup.LevelSetup;
+import ru.mipt.bit.platformer.logics.models.Level;
+import ru.mipt.bit.platformer.visuals.*;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 public class GameDesktopLauncher implements ApplicationListener {
 
@@ -26,57 +24,31 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     private Level level;
 
-    private Tank playerTank;
-
-    private ActionHandler actionHandler;
-
-    private PlayerInput inputManager;
+    private ActionGenerator actionGenerator;
 
 
     @Override
     public void create() {
-        // create level
-        ArrayList<Vector2D> treeObstacleCoordinates = new ArrayList<Vector2D>();
-        treeObstacleCoordinates.add(new Vector2D(3, 3));
-        treeObstacleCoordinates.add(new Vector2D(1, 3));
+        LevelSetup levelSetup = new FileLevelSetup(
+                "src/main/resources/levels/level1.txt");
+        //LevelSetup levelSetup = new RandomLevelSetup();
+        level = levelSetup.getLevel();
 
-        Vector2D leftCorner = new Vector2D(0, 0);
-        Vector2D rightCorner = new Vector2D(9, 7);
-        level = new Level(leftCorner, rightCorner, treeObstacleCoordinates);
+        actionGenerator = new ActionGenerator(level);
 
-        // create playerTank
-        Vector2D startCoordinates = new Vector2D(1, 1);
-        playerTank = new Tank(startCoordinates, Direction.simpleDirection.UP);
-
-        //actionHandler = new ActionHandler();
-        inputManager = new PlayerInput(playerTank, level);
-
-        // create visuals
-        VisualObject visualTank = new VisualObject("images/tank_blue.png");
-        VisualObject visualTree = new VisualObject("images/greenTree.png");
-        VisualLevel visualLevel = new VisualLevel("level.tmx");
-
-        // create drawer
-        drawer = new GdxDrawer(level, playerTank, visualLevel, visualTree, visualTank);
+        drawer = new GdxDrawer(level);
     }
 
     @Override
     public void render() {
         clear_screen();
 
-        // get time passed since the last render
-        float deltaTime = Gdx.graphics.getDeltaTime();
+        Collection<Action> actions = actionGenerator.generate();
+        actions.forEach(Action::process);
 
+        level.updateProgress(Gdx.graphics.getDeltaTime());
 
-        Action playerAction = inputManager.getAction();
-        ActionHandler.handle(playerAction);
-
-        drawer.processTankMotion(playerTank);
-
-        playerTank.updateMotionProgress(deltaTime);
-
-        drawer.drawVisuals(level, playerTank);
-
+        drawer.drawVisuals(level);
 
     }
 
