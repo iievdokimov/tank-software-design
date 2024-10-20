@@ -8,10 +8,6 @@ import ru.mipt.bit.platformer.util.TileMovement;
 public interface VisualObject{
     Rectangle getRectangle();
 
-    TextureRegion getGraphics();
-
-    float getRotation();
-
     void draw(Batch batch);
 
     void dispose();

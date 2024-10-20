@@ -33,12 +33,9 @@ public class VisualTree implements VisualObject{
         this.texturePath = deepCopy.texturePath;
     }
 
+    @Override
     public Rectangle getRectangle() {
         return rectangle;
-    }
-
-    public TextureRegion getGraphics() {
-        return graphics;
     }
 
     public float getRotation() {
@@ -50,10 +47,12 @@ public class VisualTree implements VisualObject{
         drawTextureRegionUnscaled(batch, graphics, rectangle, getRotation());
     }
 
+    @Override
     public void dispose(){
         texture.dispose();
     }
 
+    @Override
     public void processMotion(TileMovement tileMovement){
         // idle
     }
