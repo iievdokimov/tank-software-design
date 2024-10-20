@@ -15,7 +15,6 @@ public class FileLevelProvider implements LevelProvider {
     private String levelFilePath;
     private final Character treeChar = 'T';
     private final Character playerChar = 'X';
-    private Tank playerTank = null;
 
 
     public FileLevelProvider(String filePath){
@@ -30,10 +29,10 @@ public class FileLevelProvider implements LevelProvider {
     public Level configureFromFile(String filePath){
         ArrayList<String> levelLines = readLevel(filePath);
 
+        ParseLevelLinesResult result = parseLevelLines(levelLines);
+        Tank playerTank = result.getPlayerTank();
+        ArrayList<GameObject> gameObjects = result.getGameObjects();
 
-        ArrayList<GameObject> gameObjects = new ArrayList<>();
-        //Tank playerTank = null;
-        parseLevelLines(gameObjects, levelLines);
         Vector2D leftCorner = new Vector2D(0, 0);
         Vector2D rightCorner = getRightCorner(levelLines);
 
@@ -46,8 +45,12 @@ public class FileLevelProvider implements LevelProvider {
         return new Vector2D(levelLines.getFirst().length() - 1, levelLines.size() - 1);
     }
 
-    private void parseLevelLines(ArrayList<GameObject> gameObjects, ArrayList<String> levelLines) {
+
+    private ParseLevelLinesResult parseLevelLines(ArrayList<String> levelLines) {
         Vector2D rightCorner = getRightCorner(levelLines);
+
+        ArrayList<GameObject> gameObjects = new ArrayList<>();
+        Tank playerTank = null;
         for (int i = 0; i < levelLines.size(); i++) {
             for (int j = 0; j < levelLines.get(i).length(); j++) {
                 Character c = levelLines.get(i).charAt(j);
@@ -61,6 +64,7 @@ public class FileLevelProvider implements LevelProvider {
             }
 
         }
+        return new ParseLevelLinesResult(playerTank, gameObjects);
     }
 
     private ArrayList<String> readLevel(String filePath) {
@@ -79,4 +83,22 @@ public class FileLevelProvider implements LevelProvider {
         }
     }
 
+
+    private class ParseLevelLinesResult{
+        private final Tank playerTank;
+        private final ArrayList<GameObject> gameObjects;
+
+        public ParseLevelLinesResult(Tank playerTank, ArrayList<GameObject> gameObjects) {
+            this.playerTank = playerTank;
+            this.gameObjects = gameObjects;
+        }
+
+        public Tank getPlayerTank() {
+            return playerTank;
+        }
+
+        public ArrayList<GameObject> getGameObjects() {
+            return gameObjects;
+        }
+    }
 }
