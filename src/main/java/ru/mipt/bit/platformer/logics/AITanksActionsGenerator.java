@@ -1,6 +1,7 @@
 package ru.mipt.bit.platformer.logics;
 
 import ru.mipt.bit.platformer.logics.actions.Action;
+import ru.mipt.bit.platformer.logics.actions.MoveAction;
 import ru.mipt.bit.platformer.logics.models.Direction;
 import ru.mipt.bit.platformer.logics.models.GameObject;
 import ru.mipt.bit.platformer.logics.models.Level;
@@ -20,15 +21,16 @@ public class AITanksActionsGenerator implements ActionsGenerator{
 
     @Override
     public ArrayList<Action> generate() {
+        ArrayList<Action> actions = new ArrayList<>();
+
         List<GameObject> objects = level.getObjects();
         for (GameObject object : objects) {
             // TODO: OCP is broken
             if(object.getClass() == Tank.class && object != level.getPlayerTank()){
-                ((Tank) object).move(getRandomDirection(), level);
+                actions.add(new MoveAction((Tank) object, level, getRandomDirection()));
             }
         }
-
-        return new ArrayList<>();
+        return actions;
     }
 
     private Direction getRandomDirection(){
