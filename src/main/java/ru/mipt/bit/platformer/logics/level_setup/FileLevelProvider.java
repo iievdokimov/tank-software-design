@@ -10,18 +10,20 @@ import java.util.ArrayList;
 import java.nio.file.Files;
 
 
-public class FileLevelSetup implements LevelSetup {
+public class FileLevelProvider implements LevelProvider {
     private Level level;
+    private String levelFilePath;
     private final Character treeChar = 'T';
     private final Character playerChar = 'X';
     private Tank playerTank = null;
 
-    public FileLevelSetup(String filePath){
-        level = configureFromFile(filePath);
+
+    public FileLevelProvider(String filePath){
+        levelFilePath = filePath;
     }
 
     public Level getLevel(){
-        return level;
+        return configureFromFile(levelFilePath);
     }
 
     public Level configureFromFile(String filePath){
@@ -40,7 +42,7 @@ public class FileLevelSetup implements LevelSetup {
     }
 
     private Vector2D getRightCorner(ArrayList<String> levelLines) {
-        return new Vector2D(levelLines.getFirst().length(), levelLines.size());
+        return new Vector2D(levelLines.getFirst().length() - 1, levelLines.size() - 1);
     }
 
     private void parseLevelLines(ArrayList<GameObject> gameObjects, ArrayList<String> levelLines) {

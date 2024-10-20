@@ -5,15 +5,14 @@ import ru.mipt.bit.platformer.util.Vector2D;
 
 import java.util.*;
 
-public class RandomLevelSetup implements LevelSetup {
+public class RandomLevelProvider implements LevelProvider {
     private Level level;
     private final Vector2D leftCorner = new Vector2D(0, 0);
     private final Vector2D rightCorner = new Vector2D(9, 7);
     private final float obstDensity = 0.4f;
 
-    public RandomLevelSetup(){
-        level = configureRandomLevel();
-    }
+    // TODO:
+    //public RandomLevelProvider( PARAMS ){}
 
     private Level configureRandomLevel(){
         // create game objects
@@ -53,6 +52,6 @@ public class RandomLevelSetup implements LevelSetup {
 
     @Override
     public Level getLevel() {
-        return level;
+        return configureRandomLevel();
     }
 }
