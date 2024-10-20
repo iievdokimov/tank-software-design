@@ -25,7 +25,7 @@ public class VisualTank implements VisualObject{
         this.texturePath = texturePath;
     }
 
-    VisualTank(VisualTank deepCopy, Tank logicalTank){
+    public VisualTank(VisualTank deepCopy, Tank logicalTank){
         texture = new Texture(deepCopy.texturePath);
         this.logicalTank = logicalTank;
         graphics = new TextureRegion(texture);

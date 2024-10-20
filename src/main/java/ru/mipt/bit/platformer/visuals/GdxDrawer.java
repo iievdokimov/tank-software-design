@@ -13,6 +13,9 @@ import ru.mipt.bit.platformer.logics.models.Tank;
 import ru.mipt.bit.platformer.logics.models.Tree;
 import ru.mipt.bit.platformer.util.TileMovement;
 import ru.mipt.bit.platformer.util.Vector2D;
+import ru.mipt.bit.platformer.visuals.visualobj_factory.VisualObjectFactoryRegistry;
+import ru.mipt.bit.platformer.visuals.visualobj_factory.VisualTankFactory;
+import ru.mipt.bit.platformer.visuals.visualobj_factory.VisualTreeFactory;
 
 import java.util.ArrayList;
 
@@ -37,18 +40,12 @@ public class GdxDrawer implements Drawer {
         groundLayer = getSingleLayer(gdxLevel);
         tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
+        VisualObjectFactoryRegistry registry = new VisualObjectFactoryRegistry();
+        registry.registerFactory(Tank.class, new VisualTankFactory(gdxTank));
+        registry.registerFactory(Tree.class, new VisualTreeFactory(gdxTree));
 
         for (GameObject gameObject : level.getObjects()) {
-            VisualObject visualObject;
-            if(gameObject.getClass() == Tank.class){
-                visualObject = new VisualTank(gdxTank, (Tank) gameObject);
-            } else if (gameObject.getClass() == Tree.class) {
-                visualObject = new VisualTree(gdxTree, (Tree) gameObject);
-            } else {
-                // ?
-                visualObject = new VisualTree(gdxTree, (Tree) gameObject);
-            }
-
+            VisualObject visualObject = registry.createVisualObject(gameObject);
             visualObjects.add(visualObject);
             moveRectangleAtTileCenter(groundLayer, visualObject.getRectangle(), gameObject.getCoordinates().toGridPoint2());
         }
