@@ -14,7 +14,9 @@ import ru.mipt.bit.platformer.logics.PlayerActionsGenerator;
 import ru.mipt.bit.platformer.logics.actions.Action;
 import ru.mipt.bit.platformer.logics.level_setup.FileLevelProvider;
 import ru.mipt.bit.platformer.logics.level_setup.LevelProvider;
+import ru.mipt.bit.platformer.logics.level_setup.RandomLevelProvider;
 import ru.mipt.bit.platformer.logics.models.Level;
+import ru.mipt.bit.platformer.util.Vector2D;
 import ru.mipt.bit.platformer.visuals.*;
 
 import java.util.ArrayList;
@@ -96,9 +98,15 @@ public class GameDesktopLauncher implements ApplicationListener {
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 
-        LevelProvider levelProvider = new FileLevelProvider(
-                "src/main/resources/levels/level1.txt");
-        //LevelSetup levelSetup = new RandomLevelSetup();
+//        LevelProvider levelProvider = new FileLevelProvider(
+//                "src/main/resources/levels/level1.txt");
+
+        // use dependency injection to move construction process
+        LevelProvider levelProvider = new RandomLevelProvider(
+                new Vector2D(0, 0),
+                new Vector2D(7, 10),
+                0.4f, 4
+                );
 
         // level width: 10 tiles x 128px, height: 8 tiles x 128px
         config.setWindowedMode(1280, 1024);
