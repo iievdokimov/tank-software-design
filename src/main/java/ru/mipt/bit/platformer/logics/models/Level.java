@@ -48,10 +48,11 @@ public class Level {
         // now check all objects for collision (even player tank)
         // maybe will be changed
         for (GameObject obst : gameObjects) {
-            if(obst.getCoordinates().equals(coordinates)){
+            if(obst.getCoordinates().equals(coordinates) || obst.getDestCoordinates().equals(coordinates)) {
                 free = false;
                 break;
             }
+
         }
         return free;
     }

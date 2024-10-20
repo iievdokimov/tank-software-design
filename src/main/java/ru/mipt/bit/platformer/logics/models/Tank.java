@@ -62,10 +62,12 @@ public class Tank implements GameObject {
         motionProgress = motionFinished;
     }
 
+    @Override
     public Vector2D getCoordinates() {
         return coordinates;
     }
 
+    @Override
     public Vector2D getDestCoordinates() {
         return destCoordinates;
     }
@@ -79,6 +81,7 @@ public class Tank implements GameObject {
         updateMotionProgress(deltaTime);
     }
 
+    @Override
     public float getRotation() {
         return direction.getAngle();
     }

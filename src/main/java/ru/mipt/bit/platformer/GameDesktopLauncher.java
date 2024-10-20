@@ -102,7 +102,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         LevelProvider levelProvider = new RandomLevelProvider(
                 new Vector2D(0, 0),
                 new Vector2D(7, 7),
-                0.3f, 4
+                0.1f, 4
                 );
 
         Level level = levelProvider.getLevel();

@@ -9,4 +9,5 @@ public interface GameObject {
 
     Vector2D getCoordinates();
 
+    Vector2D getDestCoordinates();
 }

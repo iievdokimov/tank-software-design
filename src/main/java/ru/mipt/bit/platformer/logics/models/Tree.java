@@ -11,15 +11,23 @@ public class Tree implements GameObject{
         rotation = 0f;
     }
 
+    @Override
     public void updateProgress(float deltaTime) {
         // idle
     }
 
+    @Override
     public float getRotation() {
         return rotation;
     }
 
+    @Override
     public Vector2D getCoordinates() {
+        return coordinates;
+    }
+
+    @Override
+    public Vector2D getDestCoordinates() {
         return coordinates;
     }
 
