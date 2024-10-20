@@ -66,4 +66,10 @@ public class Level {
         return playerTank;
     }
 
+    public Vector2D getSize() {
+        int width = max_x - min_x + 1;
+        int height = max_y - min_y + 1;
+        return new Vector2D(width, height);
+    }
+
 }

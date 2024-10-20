@@ -26,22 +26,19 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     private Drawer drawer;
 
-    private LevelProvider levelProvider;
-
     private Level level;
 
     private ArrayList<ActionsGenerator> actionGenerators;
 
 
-    public GameDesktopLauncher(LevelProvider levelProvider){
+    public GameDesktopLauncher(Level level){
         super();
-        this.levelProvider = levelProvider;
+        this.level = level;
     }
 
 
     @Override
     public void create() {
-        level = levelProvider.getLevel();
 
         actionGenerators = new ArrayList<>();
         actionGenerators.add(new PlayerActionsGenerator(level));
@@ -104,14 +101,18 @@ public class GameDesktopLauncher implements ApplicationListener {
         // use dependency injection to move construction process
         LevelProvider levelProvider = new RandomLevelProvider(
                 new Vector2D(0, 0),
-                new Vector2D(7, 10),
-                0.4f, 4
+                new Vector2D(7, 7),
+                0.3f, 4
                 );
 
+        Level level = levelProvider.getLevel();
+
         // level width: 10 tiles x 128px, height: 8 tiles x 128px
-        config.setWindowedMode(1280, 1024);
+        Vector2D levelSize = level.getSize();
+        int squareTileWidth = 128;
+        config.setWindowedMode((int)(squareTileWidth * levelSize.x()), (int)(squareTileWidth * levelSize.y()));
+        // TODO: generate new level.tmx files for bigger than 8x10 levels (?)
 
-
-        new Lwjgl3Application(new GameDesktopLauncher(levelProvider), config);
+        new Lwjgl3Application(new GameDesktopLauncher(level), config);
     }
 }
