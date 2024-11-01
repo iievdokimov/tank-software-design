@@ -87,11 +87,6 @@ public class GameDesktopLauncher implements ApplicationListener {
         drawer.dispose();
     }
 
-
-//    class LevelWindowConfig{
-//        public
-//    }
-
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 

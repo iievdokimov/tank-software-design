@@ -1,16 +1,20 @@
 package ru.mipt.bit.platformer.visuals;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Rectangle;
 import ru.mipt.bit.platformer.logics.models.GameObject;
 import ru.mipt.bit.platformer.logics.models.Level;
 import ru.mipt.bit.platformer.logics.models.Tank;
 import ru.mipt.bit.platformer.logics.models.Tree;
+import ru.mipt.bit.platformer.util.GdxGameUtils;
 import ru.mipt.bit.platformer.util.TileMovement;
 import ru.mipt.bit.platformer.util.Vector2D;
 import ru.mipt.bit.platformer.visuals.visualobj_factory.VisualObjectFactoryRegistry;
@@ -45,7 +49,7 @@ public class GdxDrawer implements Drawer {
         registry.registerFactory(Tree.class, new VisualTreeFactory(gdxTree));
 
         for (GameObject gameObject : level.getObjects()) {
-            VisualObject visualObject = registry.createVisualObject(gameObject);
+            VisualObject visualObject = new VisualObjectHealthDecorator(registry.createVisualObject(gameObject));
             visualObjects.add(visualObject);
             moveRectangleAtTileCenter(groundLayer, visualObject.getRectangle(), gameObject.getCoordinates().toGridPoint2());
         }
@@ -90,5 +94,7 @@ public class GdxDrawer implements Drawer {
         gdxTree = new VisualTree("images/greenTree.png", new Tree(new Vector2D()));
         gdxLevel = new TmxMapLoader().load("level.tmx");
     }
+
+
 
 }

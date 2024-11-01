@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import ru.mipt.bit.platformer.logics.models.GameObject;
 import ru.mipt.bit.platformer.logics.models.Tank;
 import ru.mipt.bit.platformer.util.TileMovement;
 
@@ -57,5 +58,10 @@ public class VisualTank implements VisualObject{
         // calculate interpolated player screen coordinates
         tileMovement.moveRectangleBetweenTileCenters(getRectangle(), logicalTank.getCoordinates().toGridPoint2(),
                 logicalTank.getDestCoordinates().toGridPoint2(), logicalTank.getMotionProgress());
+    }
+
+    @Override
+    public GameObject getLogicalEntity() {
+        return logicalTank;
     }
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import ru.mipt.bit.platformer.logics.models.GameObject;
 import ru.mipt.bit.platformer.logics.models.Tree;
 import ru.mipt.bit.platformer.util.TileMovement;
 
@@ -55,5 +56,10 @@ public class VisualTree implements VisualObject{
     @Override
     public void processMotion(TileMovement tileMovement){
         // idle
+    }
+
+    @Override
+    public GameObject getLogicalEntity() {
+        return logicalTree;
     }
 }
