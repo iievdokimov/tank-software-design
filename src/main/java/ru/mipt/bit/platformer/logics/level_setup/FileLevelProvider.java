@@ -3,11 +3,13 @@ package ru.mipt.bit.platformer.logics.level_setup;
 import ru.mipt.bit.platformer.logics.models.*;
 import ru.mipt.bit.platformer.util.Vector2D;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.nio.file.Files;
+import java.util.List;
 
 
 public class FileLevelProvider implements LevelProvider {
@@ -31,12 +33,14 @@ public class FileLevelProvider implements LevelProvider {
 
         ParseLevelLinesResult result = parseLevelLines(levelLines);
         Tank playerTank = result.getPlayerTank();
-        ArrayList<GameObject> gameObjects = result.getGameObjects();
+        //ArrayList<GameObject> gameObjects = result.getGameObjects();
+        ArrayList<Tank> tanks = result.getTanks();
+        ArrayList<Tree> trees = result.getTrees();
 
         Vector2D leftCorner = new Vector2D(0, 0);
         Vector2D rightCorner = getRightCorner(levelLines);
 
-        level = new Level(leftCorner, rightCorner, gameObjects, playerTank);
+        level = new Level(leftCorner, rightCorner, tanks, trees, playerTank);
 
         return level;
     }
@@ -49,22 +53,24 @@ public class FileLevelProvider implements LevelProvider {
     private ParseLevelLinesResult parseLevelLines(ArrayList<String> levelLines) {
         Vector2D rightCorner = getRightCorner(levelLines);
 
-        ArrayList<GameObject> gameObjects = new ArrayList<>();
+        //ArrayList<GameObject> gameObjects = new ArrayList<>();
+        ArrayList<Tank> tanks = new ArrayList<>();
+        ArrayList<Tree> trees = new ArrayList<>();
         Tank playerTank = null;
         for (int i = 0; i < levelLines.size(); i++) {
             for (int j = 0; j < levelLines.get(i).length(); j++) {
                 Character c = levelLines.get(i).charAt(j);
                 Vector2D coord = new Vector2D(j, (int)rightCorner.y() - i);
                 if(c == treeChar){
-                    gameObjects.add(new Tree(coord));
+                    trees.add(new Tree(coord));
                 } else if (c == playerChar) {
                     playerTank = new Tank(coord, Direction.UP);
-                    gameObjects.add(playerTank);
+                    tanks.add(playerTank);
                 }
             }
 
         }
-        return new ParseLevelLinesResult(playerTank, gameObjects);
+        return new ParseLevelLinesResult(playerTank, tanks, trees);
     }
 
     private ArrayList<String> readLevel(String filePath) {
@@ -86,19 +92,26 @@ public class FileLevelProvider implements LevelProvider {
 
     private class ParseLevelLinesResult{
         private final Tank playerTank;
-        private final ArrayList<GameObject> gameObjects;
+        //private final ArrayList<GameObject> gameObjects;
+        private final ArrayList<Tank> tanks;
+        private final ArrayList<Tree> trees;
 
-        public ParseLevelLinesResult(Tank playerTank, ArrayList<GameObject> gameObjects) {
+        public ParseLevelLinesResult(Tank playerTank, ArrayList<Tank> tanks, ArrayList<Tree> trees) {
             this.playerTank = playerTank;
-            this.gameObjects = gameObjects;
+            this.tanks = tanks;
+            this.trees = trees;
         }
 
         public Tank getPlayerTank() {
             return playerTank;
         }
 
-        public ArrayList<GameObject> getGameObjects() {
-            return gameObjects;
+        public ArrayList<Tree> getTrees(){
+            return trees;
+        }
+
+        public ArrayList<Tank> getTanks(){
+            return tanks;
         }
     }
 }

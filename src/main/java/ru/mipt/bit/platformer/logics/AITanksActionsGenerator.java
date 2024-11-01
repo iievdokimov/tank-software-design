@@ -23,11 +23,10 @@ public class AITanksActionsGenerator implements ActionsGenerator{
     public ArrayList<Action> generate() {
         ArrayList<Action> actions = new ArrayList<>();
 
-        List<GameObject> objects = level.getObjects();
-        for (GameObject object : objects) {
-            // TODO: OCP is broken
-            if(object.getClass() == Tank.class && object != level.getPlayerTank()){
-                actions.add(new MoveAction((Tank) object, level, getRandomDirection()));
+        List<Tank> tanks = level.getTanks();
+        for (Tank tank : tanks) {
+            if(tank != level.getPlayerTank()){
+                actions.add(new MoveAction(tank, level, getRandomDirection()));
             }
         }
         return actions;

@@ -13,12 +13,14 @@ public class LevelTest {
     @Test
     public void freeCoordinatesObst() {
         Vector2D obstCoordinate = new Vector2D(1, 1);
-        ArrayList<GameObject> gameObjects = new ArrayList<>();
-        gameObjects.add(new Tree(obstCoordinate));
+        //ArrayList<GameObject> gameObjects = new ArrayList<>();
+        ArrayList<Tank> tanks = new ArrayList<>();
+        ArrayList<Tree> trees = new ArrayList<>();
+        trees.add(new Tree(obstCoordinate));
 
         Vector2D leftCorner = new Vector2D(0, 0);
         Vector2D rightCorner = new Vector2D(10, 10);
-        Level level = new Level(leftCorner, rightCorner, gameObjects, new Tank(new Vector2D(-1, -1), Direction.RIGHT));
+        Level level = new Level(leftCorner, rightCorner, tanks, trees, new Tank(new Vector2D(-1, -1), Direction.RIGHT));
 
         Vector2D freePosition = new Vector2D(5, 6);
         Vector2D busyPosition = obstCoordinate;
@@ -29,7 +31,9 @@ public class LevelTest {
 
     @Test
     public void freeCoordinatesBoarders() {
-        ArrayList<GameObject> gameObjects = new ArrayList<>();
+        //ArrayList<GameObject> gameObjects = new ArrayList<>();
+        ArrayList<Tank> tanks = new ArrayList<>();
+        ArrayList<Tree> trees = new ArrayList<>();
 
         int min_x = 0;
         int min_y = 0;
@@ -38,7 +42,7 @@ public class LevelTest {
 
         Vector2D leftCorner = new Vector2D(min_x, min_y);
         Vector2D rightCorner = new Vector2D(max_x, max_y);
-        Level level = new Level(leftCorner, rightCorner, gameObjects,new Tank(new Vector2D(-2, -2), Direction.RIGHT));
+        Level level = new Level(leftCorner, rightCorner, tanks, trees, new Tank(new Vector2D(-2, -2), Direction.RIGHT));
 
         Vector2D freePosition = new Vector2D(getRandomNumber(min_x, max_x), getRandomNumber(min_y, max_y));
         Vector2D freePositionEdge = new Vector2D(min_x, getRandomNumber(min_y, max_y));

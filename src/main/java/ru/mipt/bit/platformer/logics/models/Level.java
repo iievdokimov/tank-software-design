@@ -4,10 +4,13 @@ import ru.mipt.bit.platformer.util.Vector2D;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 public class Level {
-    private List<GameObject> gameObjects;
+    //private List<GameObject> gameObjects;
+    private List<Tank> tanks;
+    private List<Tree> trees;
     private Tank playerTank;
 
     private final int min_x;
@@ -15,8 +18,10 @@ public class Level {
     private final int max_x;
     private final int max_y;
 
-    public Level(Vector2D leftCorner, Vector2D rightCorner, List<GameObject> gameObjects, Tank playerTank){
-        this.gameObjects = gameObjects;
+    //public Level(Vector2D leftCorner, Vector2D rightCorner, List<GameObject> gameObjects, Tank playerTank){
+    public Level(Vector2D leftCorner, Vector2D rightCorner, List<Tank> tanks, List<Tree> trees, Tank playerTank){
+        this.tanks = tanks;
+        this.trees = trees;
         this.playerTank = playerTank;
         min_x = (int)leftCorner.x();
         min_y = (int)leftCorner.y();
@@ -26,7 +31,8 @@ public class Level {
     }
 
     public Level(){
-        gameObjects = new ArrayList<>();
+        tanks = new ArrayList<>();
+        trees = new ArrayList<>();
         min_x = Integer.MIN_VALUE;
         min_y = Integer.MIN_VALUE;
         max_x = Integer.MAX_VALUE;
@@ -34,8 +40,19 @@ public class Level {
     }
 
 
-    public List<GameObject> getObjects(){
-        return gameObjects;
+    public List<GameObject> getObjects() {
+        // TODO: -> use unmutable wrapper
+        return Stream.concat(tanks.stream(), trees.stream()).toList();
+    }
+
+    public List<Tank> getTanks() {
+        // TODO: -> use unmutable wrapper
+        return tanks;
+    }
+
+    public List<Tree> getTrees() {
+        // TODO: -> use unmutable wrapper
+        return trees;
     }
 
     public boolean freeCoordinates(Vector2D coordinates) {
@@ -47,7 +64,7 @@ public class Level {
         boolean free = true;
         // now check all objects for collision (even player tank)
         // maybe will be changed
-        for (GameObject obst : gameObjects) {
+        for (GameObject obst : getObjects()) {
             if(obst.getCoordinates().equals(coordinates) || obst.getDestCoordinates().equals(coordinates)) {
                 free = false;
                 break;
@@ -58,7 +75,7 @@ public class Level {
     }
 
     public void updateProgress(float deltaTime){
-        for (GameObject gameObject : gameObjects) {
+        for (GameObject gameObject : getObjects()) {
             gameObject.updateProgress(deltaTime);
         }
     }

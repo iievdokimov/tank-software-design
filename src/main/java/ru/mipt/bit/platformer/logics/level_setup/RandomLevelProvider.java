@@ -4,6 +4,7 @@ import ru.mipt.bit.platformer.logics.models.*;
 import ru.mipt.bit.platformer.util.Vector2D;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class RandomLevelProvider implements LevelProvider {
     private Level level;
@@ -23,49 +24,50 @@ public class RandomLevelProvider implements LevelProvider {
 
     private Level configureRandomLevel(){
         // create game objects
-        ArrayList<GameObject> gameObjects = new ArrayList<>();
-        Tank playerTank = createPlayerTank(gameObjects);
+        ArrayList<Tank> tanks = new ArrayList<>();
+        ArrayList<Tree> trees = new ArrayList<>();
+        Tank playerTank = createPlayerTank(tanks);
 
         HashSet<Vector2D> nonemptyCoordinates = new HashSet<>();
         nonemptyCoordinates.add(playerTank.getCoordinates());
 
-        gameObjects = createTanks(gameObjects, nonemptyCoordinates);
+        tanks = createTanks(tanks, nonemptyCoordinates);
 
-        for(GameObject obj : gameObjects){
+        for(GameObject obj : tanks){
             nonemptyCoordinates.add(obj.getCoordinates());
         }
 
-        gameObjects = createTrees(gameObjects, nonemptyCoordinates);
+        trees = createTrees(nonemptyCoordinates);
 
-        level = new Level(leftCorner, rightCorner, gameObjects, playerTank);
+        level = new Level(leftCorner, rightCorner, tanks, trees, playerTank);
         return level;
     }
 
-    private ArrayList<GameObject> createTanks(ArrayList<GameObject> gameObjects, HashSet<Vector2D> nonemptyCoordinates){
+    private ArrayList<Tank> createTanks(ArrayList<Tank> tanks, HashSet<Vector2D> nonemptyCoordinates){
         for (int i = 0; i < numTanks; i++) {
-            gameObjects.add(new Tank(getRandomFreeCoordinate(nonemptyCoordinates), Direction.UP));
+            tanks.add(new Tank(getRandomFreeCoordinate(nonemptyCoordinates), Direction.UP));
         }
 
-        return gameObjects;
+        return tanks;
     }
 
-    private ArrayList<GameObject> createTrees(ArrayList<GameObject> gameObjects, HashSet<Vector2D> nonemptyCoordinates){
+    private ArrayList<Tree> createTrees(HashSet<Vector2D> nonemptyCoordinates){
+        ArrayList<Tree> trees = new ArrayList<>();
         for (int x = 0; x <= rightCorner.x(); x++) {
             for (int y = 0; y <= rightCorner.y(); y++) {
                 double coin = Math.random();
                 if(coin <= obstDensity && !(nonemptyCoordinates.contains(new Vector2D(x, y)))){
-                    gameObjects.add(new Tree(new Vector2D(x, y)));
+                    trees.add(new Tree(new Vector2D(x, y)));
                 }
             }
         }
-        return gameObjects;
+        return trees;
     }
 
-    private Tank createPlayerTank(ArrayList<GameObject> gameObjects){
-
+    private Tank createPlayerTank(ArrayList<Tank> tanks){
         Vector2D startCoordinates = getRandomVectorInField();
         Tank playerTank = new Tank(startCoordinates, Direction.UP);
-        gameObjects.add(playerTank);
+        tanks.add(playerTank);
         return playerTank;
     }
 
