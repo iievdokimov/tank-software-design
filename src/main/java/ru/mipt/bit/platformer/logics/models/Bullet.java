@@ -14,7 +14,7 @@ public class Bullet implements GameObject, Movable {
 
     GameObject shooter;
 
-    // костыль( only for broken action-oriented CheckBulletStateAction::process
+    // костыль( only for broken action-oriented CheckBulletStateAction::process - (generates multiple duplicate actions)
     private boolean processed = false;
 
     private Direction direction;
@@ -69,14 +69,14 @@ public class Bullet implements GameObject, Movable {
     }
 
     @Override
-    public void move(Direction direction, Level level){
+    public void move(Direction direction, Level level) {
         if (destCoordinates.equals(coordinates)) {
             destCoordinates = destCoordinates.add(direction.getVector());
             motionProgress = motionStarted;
         }
     }
 
-    private void updateMotionProgress(float deltaTime){
+    private void updateMotionProgress(float deltaTime) {
         motionProgress = continueProgress(motionProgress, deltaTime, movementSpeed);
         if (isEqual(motionProgress, motionFinished)) {
             coordinates = destCoordinates;
@@ -96,25 +96,11 @@ public class Bullet implements GameObject, Movable {
         return damage;
     }
 
-    public void onProcess(){
+    public void onProcess() {
         processed = true;
     }
 
-    public boolean isProcessed(){
+    public boolean isProcessed() {
         return processed;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Bullet bullet = (Bullet) o;
-        return Float.compare(motionProgress, bullet.motionProgress) == 0 && Float.compare(movementSpeed, bullet.movementSpeed) == 0 && Float.compare(damage, bullet.damage) == 0 && direction == bullet.direction && Objects.equals(coordinates, bullet.coordinates);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(direction, coordinates, motionProgress, movementSpeed, damage);
     }
 }

@@ -30,6 +30,12 @@ public class Level {
         min_y = (int)leftCorner.y();
         max_x = (int)rightCorner.x();
         max_y = (int)rightCorner.y();
+
+        for(LevelListener subscriber : subcsribers) {
+            for (GameObject object : getObjects()) {
+                subscriber.onNewObject(object);
+            }
+        }
     }
 
     public Level(){

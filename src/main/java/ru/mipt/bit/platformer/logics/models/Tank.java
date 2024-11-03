@@ -36,7 +36,7 @@ public class Tank implements GameObject, Livable, Movable {
         // TODO: move to constructor parameters
         fullHealth = 100;
         //currentHealth = fullHealth;
-        curHealth = random(40, fullHealth);
+        curHealth = random(20, fullHealth);
     }
 
     @Override
@@ -119,18 +119,5 @@ public class Tank implements GameObject, Livable, Movable {
     @Override
     public float getRelativeHealth() {
         return curHealth / fullHealth;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Tank tank = (Tank) o;
-        return Float.compare(motionProgress, tank.motionProgress) == 0 && Float.compare(MOVEMENT_SPEED, tank.MOVEMENT_SPEED) == 0 && Float.compare(bulletMovementSpeed, tank.bulletMovementSpeed) == 0 && Float.compare(damagePerBullet, tank.damagePerBullet) == 0 && Float.compare(curHealth, tank.curHealth) == 0 && Float.compare(fullHealth, tank.fullHealth) == 0 && direction == tank.direction && Objects.equals(coordinates, tank.coordinates) && Objects.equals(destCoordinates, tank.destCoordinates);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(direction, coordinates, destCoordinates, motionProgress, MOVEMENT_SPEED, bulletMovementSpeed, damagePerBullet, curHealth, fullHealth);
     }
 }
