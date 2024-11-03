@@ -111,19 +111,35 @@ public class Level {
         }
 
 
-        // instead of CheckBulletStateAction (?)
-        Iterator<Bullet> iterator = bullets.iterator();
+        // also can be done action oriented
+        Iterator<Tank> iterator = tanks.iterator();
         while (iterator.hasNext()) {
-            Bullet bullet = iterator.next();
-            GameObject encounterObj = collisionWith(bullet);
-            if (encounterObj != null && !encounterObj.equals(bullet.getShooter())) {
-                encounterObj.encounterBullet(bullet);
+            Tank tank = iterator.next();
+            if(tank.getRelativeHealth() <= 0){
                 iterator.remove();
                 for(LevelListener subscriber : subcsribers){
-                    subscriber.onDeleteObject(bullet);
+                    subscriber.onDeleteObject(tank);
                 }
             }
+            // TODO: playerTank's death -> gameOver
         }
+
+        // instead of CheckBulletStateAction
+        // (?) seems OCP-bad
+        // but action-oriented code has костыли in the way i implement it
+        //
+//        Iterator<Bullet> iterator = bullets.iterator();
+//        while (iterator.hasNext()) {
+//            Bullet bullet = iterator.next();
+//            GameObject encounterObj = collisionWith(bullet);
+//            if (encounterObj != null && !encounterObj.equals(bullet.getShooter())) {
+//                encounterObj.encounterBullet(bullet);
+//                iterator.remove();
+//                for(LevelListener subscriber : subcsribers){
+//                    subscriber.onDeleteObject(bullet);
+//                }
+//            }
+//        }
     }
 
     public Tank getPlayerTank(){

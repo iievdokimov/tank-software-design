@@ -14,6 +14,9 @@ public class Bullet implements GameObject, Movable {
 
     GameObject shooter;
 
+    // костыль( only for broken action-oriented CheckBulletStateAction::process
+    private boolean processed = false;
+
     private Direction direction;
     private Vector2D coordinates;
     private Vector2D destCoordinates;
@@ -92,6 +95,15 @@ public class Bullet implements GameObject, Movable {
     public float getDamage() {
         return damage;
     }
+
+    public void onProcess(){
+        processed = true;
+    }
+
+    public boolean isProcessed(){
+        return processed;
+    }
+
 
     @Override
     public boolean equals(Object o) {

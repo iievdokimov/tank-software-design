@@ -36,7 +36,7 @@ public class Tank implements GameObject, Livable, Movable {
         // TODO: move to constructor parameters
         fullHealth = 100;
         //currentHealth = fullHealth;
-        curHealth = random(1, fullHealth);
+        curHealth = random(40, fullHealth);
     }
 
     @Override
@@ -105,8 +105,6 @@ public class Tank implements GameObject, Livable, Movable {
     @Override
     public void encounterBullet(Bullet bullet) {
         curHealth -= bullet.getDamage();
-        //delete bullet
-        // optional delete tank
     }
 
     @Override
