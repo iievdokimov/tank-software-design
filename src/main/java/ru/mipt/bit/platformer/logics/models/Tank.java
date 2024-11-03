@@ -21,7 +21,7 @@ public class Tank implements GameObject, Livable, Movable {
 
     // TODO: move to constructor parameters
     private final float MOVEMENT_SPEED = 0.4f;
-    private final float bulletMovementSpeed = 0.8f;
+    private final float bulletMovementSpeed = 0.25f;
     private final float damagePerBullet = 10f;
 
     private float curHealth;
@@ -52,7 +52,7 @@ public class Tank implements GameObject, Livable, Movable {
     }
 
     public Bullet shoot(Level level){
-        Bullet bullet = new Bullet(coordinates.add(direction.getVector()), direction, damagePerBullet, bulletMovementSpeed);
+        Bullet bullet = new Bullet(coordinates.add(direction.getVector()), direction, damagePerBullet, bulletMovementSpeed, this);
         level.addBullet(bullet);
         return bullet;
     }

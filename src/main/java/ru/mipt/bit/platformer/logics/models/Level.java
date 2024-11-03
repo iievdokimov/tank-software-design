@@ -63,23 +63,39 @@ public class Level {
         return bullets;
     }
 
-    public void addBullet(Bullet bullet){
+    synchronized public void addBullet(Bullet bullet){
         bullets.add(bullet);
         for(LevelListener subscriber : subcsribers){
             subscriber.onNewObject(bullet);
         }
     }
 
+    public GameObject collisionWith(GameObject obj){
+        Vector2D coordinates = obj.getCoordinates();
+        if(!inBounds(coordinates)){
+            return null;
+        }
+        for(GameObject obst : getObjects()){
+            if(!obst.equals(obj) && obst.getCoordinates().equals(coordinates)){
+                return obst;
+            }
+        }
+        return null;
+    }
+
+    public boolean inBounds(Vector2D coordinates){
+        return coordinates.x() >= min_x && coordinates.x() <= max_x &&
+                coordinates.y() >= min_y && coordinates.y() <= max_y;
+    }
+
     public boolean freeCoordinates(Vector2D coordinates) {
-        if(!(coordinates.x() >= min_x && coordinates.x() <= max_x &&
-            coordinates.y() >= min_y && coordinates.y() <= max_y)){
+        if(!inBounds(coordinates)){
             return false;
         }
 
         boolean free = true;
-        // now check all objects for collision (even player tank)
-        // maybe will be changed
-        for (GameObject obst : getObjects()) {
+        // check all tanks and tress, not bullets
+        for (GameObject obst : Stream.concat(tanks.stream(), trees.stream()).toList()) {
             if(obst.getCoordinates().equals(coordinates) || obst.getDestCoordinates().equals(coordinates)) {
                 free = false;
                 break;
@@ -89,9 +105,24 @@ public class Level {
         return free;
     }
 
-    public void updateProgress(float deltaTime){
+    synchronized public void updateProgress(float deltaTime){
         for (GameObject gameObject : getObjects()) {
             gameObject.updateProgress(deltaTime);
+        }
+
+
+        // instead of CheckBulletStateAction (?)
+        Iterator<Bullet> iterator = bullets.iterator();
+        while (iterator.hasNext()) {
+            Bullet bullet = iterator.next();
+            GameObject encounterObj = collisionWith(bullet);
+            if (encounterObj != null && !encounterObj.equals(bullet.getShooter())) {
+                encounterObj.encounterBullet(bullet);
+                iterator.remove();
+                for(LevelListener subscriber : subcsribers){
+                    subscriber.onDeleteObject(bullet);
+                }
+            }
         }
     }
 
@@ -109,4 +140,10 @@ public class Level {
         return new Vector2D(width, height);
     }
 
+    synchronized public void removeBullet(Bullet bullet) {
+        bullets.remove(bullet);
+        for(LevelListener subscriber : subcsribers){
+            subscriber.onDeleteObject(bullet);
+        }
+    }
 }

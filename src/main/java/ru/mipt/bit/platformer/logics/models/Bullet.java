@@ -12,6 +12,8 @@ public class Bullet implements GameObject, Movable {
     private final float motionStarted = 0f;
     private final float motionFinished = 1f;
 
+    GameObject shooter;
+
     private Direction direction;
     private Vector2D coordinates;
     private Vector2D destCoordinates;
@@ -23,7 +25,7 @@ public class Bullet implements GameObject, Movable {
     private final float damage;
 
 
-    public Bullet(Vector2D location, Direction direction, float damage, float movementSpeed) {
+    public Bullet(Vector2D location, Direction direction, float damage, float movementSpeed, GameObject shooter) {
         coordinates = new Vector2D(location);
         destCoordinates = new Vector2D(coordinates);
         this.direction = direction;
@@ -31,8 +33,12 @@ public class Bullet implements GameObject, Movable {
 
         this.damage = damage;
         this.movementSpeed = movementSpeed;
+        this.shooter = shooter;
     }
 
+    public GameObject getShooter() {
+        return shooter;
+    }
 
     @Override
     public void updateProgress(float deltaTime) {
@@ -41,7 +47,7 @@ public class Bullet implements GameObject, Movable {
 
     @Override
     public void encounterBullet(Bullet bullet) {
-        // should disappear
+        // relatively disappears
     }
 
     @Override

@@ -10,7 +10,7 @@ import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 
 import ru.mipt.bit.platformer.logics.action_generators.AITanksActionsGenerator;
 import ru.mipt.bit.platformer.logics.action_generators.ActionsGenerator;
-import ru.mipt.bit.platformer.logics.action_generators.BulletMovementGenerator;
+import ru.mipt.bit.platformer.logics.action_generators.BulletActionsGenerator;
 import ru.mipt.bit.platformer.logics.action_generators.PlayerActionsGenerator;
 import ru.mipt.bit.platformer.logics.actions.Action;
 import ru.mipt.bit.platformer.logics.level_setup.LevelProvider;
@@ -46,7 +46,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         actionGenerators = new ArrayList<>();
         actionGenerators.add(new PlayerActionsGenerator(level, healthBarSettings));
         actionGenerators.add(new AITanksActionsGenerator(level));
-        actionGenerators.add(new BulletMovementGenerator(level));
+        actionGenerators.add(new BulletActionsGenerator(level));
 
         drawer = new GdxDrawer(level, healthBarSettings);
         level.subscribe(drawer);
