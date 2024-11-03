@@ -5,6 +5,9 @@ import ru.mipt.bit.platformer.logics.actions.Action;
 import ru.mipt.bit.platformer.logics.actions.NoneAction;
 import ru.mipt.bit.platformer.logics.input_controller.KeyTools;
 import ru.mipt.bit.platformer.logics.models.Level;
+import ru.mipt.bit.platformer.visuals.Drawer;
+import ru.mipt.bit.platformer.visuals.GdxDrawer;
+import ru.mipt.bit.platformer.visuals.HealthBarSettings;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,9 +18,10 @@ public class PlayerActionsGenerator implements ActionsGenerator {
 
     private final HashMap<Integer, Action> keyRegister;
 
-    public PlayerActionsGenerator(Level level) {
+    //public PlayerActionsGenerator(Level level, Drawer drawer) {
+    public PlayerActionsGenerator(Level level, HealthBarSettings healthBarSettings) {
         keyRegister = new HashMap<>();
-        KeyTools.registerKeys(keyRegister, level);
+        KeyTools.registerKeys(keyRegister, level, healthBarSettings);
     }
 
     @Override

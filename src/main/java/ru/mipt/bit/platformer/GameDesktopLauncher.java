@@ -40,11 +40,14 @@ public class GameDesktopLauncher implements ApplicationListener {
     @Override
     public void create() {
 
+        // TODO: dependency injection needed
+        HealthBarSettings healthBarSettings = new HealthBarSettings(true);
+
         actionGenerators = new ArrayList<>();
-        actionGenerators.add(new PlayerActionsGenerator(level));
+        actionGenerators.add(new PlayerActionsGenerator(level, healthBarSettings));
         actionGenerators.add(new AITanksActionsGenerator(level));
 
-        drawer = new GdxDrawer(level);
+        drawer = new GdxDrawer(level, healthBarSettings);
     }
 
     @Override

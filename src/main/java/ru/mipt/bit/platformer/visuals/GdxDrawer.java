@@ -36,7 +36,9 @@ public class GdxDrawer implements Drawer {
     private Batch batch;
     private static TiledMapTileLayer groundLayer;
 
-    public GdxDrawer(Level level) {
+    private HealthBarSettings healthBarSettings;
+
+    public GdxDrawer(Level level, HealthBarSettings healthBarSettings) {
         createVisuals(level);
         visualObjects = new ArrayList<>();
         batch = new SpriteBatch();
@@ -48,8 +50,10 @@ public class GdxDrawer implements Drawer {
         registry.registerFactory(Tank.class, new VisualTankFactory(gdxTank));
         registry.registerFactory(Tree.class, new VisualTreeFactory(gdxTree));
 
+        this.healthBarSettings = healthBarSettings; //new HealthBarSettings(true);
+
         for (GameObject gameObject : level.getObjects()) {
-            VisualObject visualObject = new VisualObjectHealthDecorator(registry.createVisualObject(gameObject));
+            VisualObject visualObject = new VisualObjectHealthDecorator(registry.createVisualObject(gameObject), this.healthBarSettings);
             visualObjects.add(visualObject);
             moveRectangleAtTileCenter(groundLayer, visualObject.getRectangle(), gameObject.getCoordinates().toGridPoint2());
         }

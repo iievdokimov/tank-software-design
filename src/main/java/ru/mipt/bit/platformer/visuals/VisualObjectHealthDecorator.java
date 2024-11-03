@@ -14,14 +14,16 @@ import ru.mipt.bit.platformer.util.TileMovement;
 public class VisualObjectHealthDecorator implements VisualObject {
 
     private final VisualObject wrappee;
+    private HealthBarSettings healthBarSettings;
 
-    public VisualObjectHealthDecorator(VisualObject visualObject){
+    public VisualObjectHealthDecorator(VisualObject visualObject, HealthBarSettings healthBarSettings){
         wrappee = visualObject;
+        this.healthBarSettings = healthBarSettings;
     }
 
 
     private void renderHealthbar(Batch batch) {
-        if (wrappee.getLogicalEntity() instanceof Livable livable) {
+        if (wrappee.getLogicalEntity() instanceof Livable livable && healthBarSettings.isOn()) {
             var health = livable.getRelativeHealth();
             var healthbarTexture = getHealthbarTexture(health);
             var rectangle = createRectangle();
