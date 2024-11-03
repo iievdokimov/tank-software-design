@@ -11,9 +11,13 @@ public class Tree implements GameObject{
         rotation = 0f;
     }
 
-    @Override
     public void updateProgress(float deltaTime) {
         // idle
+    }
+
+    @Override
+    public void encounterBullet(Bullet bullet) {
+        //TODO
     }
 
     @Override

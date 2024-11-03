@@ -2,6 +2,7 @@ package ru.mipt.bit.platformer.logics.input_controller;
 
 import ru.mipt.bit.platformer.logics.actions.Action;
 import ru.mipt.bit.platformer.logics.actions.MoveAction;
+import ru.mipt.bit.platformer.logics.actions.ShootAction;
 import ru.mipt.bit.platformer.logics.models.Direction;
 import ru.mipt.bit.platformer.logics.models.Level;
 import ru.mipt.bit.platformer.visuals.HealthBarSettings;
@@ -23,8 +24,8 @@ public class KeyTools {
         keyAction.put(RIGHT, new MoveAction(level.getPlayerTank(), level, Direction.RIGHT));
         keyAction.put(D, new MoveAction(level.getPlayerTank(), level, Direction.RIGHT));
 
-
         keyAction.put(L, new ToggleShowHealthAction(healthBarSettings));
 
+        keyAction.put(SPACE, new ShootAction(level.getPlayerTank(), level));
     }
 }

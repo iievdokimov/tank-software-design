@@ -5,6 +5,8 @@ import ru.mipt.bit.platformer.util.Vector2D;
 public interface GameObject {
     void updateProgress(float deltaTime);
 
+    void encounterBullet(Bullet bullet);
+
     float getRotation();
 
     Vector2D getCoordinates();

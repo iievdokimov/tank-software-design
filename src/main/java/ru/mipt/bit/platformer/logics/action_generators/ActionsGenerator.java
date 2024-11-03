@@ -1,8 +1,7 @@
-package ru.mipt.bit.platformer.logics;
+package ru.mipt.bit.platformer.logics.action_generators;
 
 import ru.mipt.bit.platformer.logics.actions.Action;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 public interface ActionsGenerator {

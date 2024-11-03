@@ -10,13 +10,11 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
-import ru.mipt.bit.platformer.logics.models.GameObject;
-import ru.mipt.bit.platformer.logics.models.Level;
-import ru.mipt.bit.platformer.logics.models.Tank;
-import ru.mipt.bit.platformer.logics.models.Tree;
+import ru.mipt.bit.platformer.logics.models.*;
 import ru.mipt.bit.platformer.util.GdxGameUtils;
 import ru.mipt.bit.platformer.util.TileMovement;
 import ru.mipt.bit.platformer.util.Vector2D;
+import ru.mipt.bit.platformer.visuals.visualobj_factory.VisualBulletFactory;
 import ru.mipt.bit.platformer.visuals.visualobj_factory.VisualObjectFactoryRegistry;
 import ru.mipt.bit.platformer.visuals.visualobj_factory.VisualTankFactory;
 import ru.mipt.bit.platformer.visuals.visualobj_factory.VisualTreeFactory;
@@ -29,6 +27,8 @@ public class GdxDrawer implements Drawer {
     private TiledMap gdxLevel;
     private VisualTank gdxTank;
     private VisualTree gdxTree;
+    private VisualBullet gdxBullet;
+    // TODO: array -> to hashSet
     private ArrayList<VisualObject> visualObjects;
 
     private MapRenderer levelRenderer;
@@ -36,9 +36,14 @@ public class GdxDrawer implements Drawer {
     private Batch batch;
     private static TiledMapTileLayer groundLayer;
 
+    private VisualObjectFactoryRegistry factoryRregistry;
+
     private HealthBarSettings healthBarSettings;
 
+    private Level level;
+
     public GdxDrawer(Level level, HealthBarSettings healthBarSettings) {
+        this.level = level;
         createVisuals(level);
         visualObjects = new ArrayList<>();
         batch = new SpriteBatch();
@@ -46,14 +51,15 @@ public class GdxDrawer implements Drawer {
         groundLayer = getSingleLayer(gdxLevel);
         tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
-        VisualObjectFactoryRegistry registry = new VisualObjectFactoryRegistry();
-        registry.registerFactory(Tank.class, new VisualTankFactory(gdxTank));
-        registry.registerFactory(Tree.class, new VisualTreeFactory(gdxTree));
+        factoryRregistry = new VisualObjectFactoryRegistry();
+        factoryRregistry.registerFactory(Tank.class, new VisualTankFactory(gdxTank));
+        factoryRregistry.registerFactory(Tree.class, new VisualTreeFactory(gdxTree));
+        factoryRregistry.registerFactory(Bullet.class, new VisualBulletFactory(gdxBullet));
 
         this.healthBarSettings = healthBarSettings; //new HealthBarSettings(true);
 
         for (GameObject gameObject : level.getObjects()) {
-            VisualObject visualObject = new VisualObjectHealthDecorator(registry.createVisualObject(gameObject), this.healthBarSettings);
+            VisualObject visualObject = new VisualObjectHealthDecorator(factoryRregistry.createVisualObject(gameObject), this.healthBarSettings);
             visualObjects.add(visualObject);
             moveRectangleAtTileCenter(groundLayer, visualObject.getRectangle(), gameObject.getCoordinates().toGridPoint2());
         }
@@ -96,9 +102,14 @@ public class GdxDrawer implements Drawer {
     private void createVisuals(Level level){
         gdxTank = new VisualTank("images/tank_blue.png", level.getPlayerTank());
         gdxTree = new VisualTree("images/greenTree.png", new Tree(new Vector2D()));
+        gdxBullet = new VisualBullet("images/bullet.png", new Bullet(new Vector2D(), Direction.UP, 0, 0));
         gdxLevel = new TmxMapLoader().load("level.tmx");
     }
 
 
-
+    @Override
+    public void onNewObject(GameObject object) {
+        VisualObject newVisualObject = factoryRregistry.createVisualObject(object);
+        visualObjects.add(newVisualObject);
+    }
 }

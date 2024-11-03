@@ -1,15 +1,12 @@
-package ru.mipt.bit.platformer.logics;
+package ru.mipt.bit.platformer.logics.action_generators;
 
 import ru.mipt.bit.platformer.logics.actions.Action;
 import ru.mipt.bit.platformer.logics.actions.MoveAction;
 import ru.mipt.bit.platformer.logics.models.Direction;
-import ru.mipt.bit.platformer.logics.models.GameObject;
 import ru.mipt.bit.platformer.logics.models.Level;
 import ru.mipt.bit.platformer.logics.models.Tank;
-import ru.mipt.bit.platformer.util.Vector2D;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class AITanksActionsGenerator implements ActionsGenerator{
