@@ -1,14 +1,11 @@
 package ru.mipt.bit.platformer.visuals;
 
-import ru.mipt.bit.platformer.logics.Level;
-import ru.mipt.bit.platformer.logics.Tank;
+import ru.mipt.bit.platformer.logics.LevelListener;
+import ru.mipt.bit.platformer.logics.models.Level;
 
-public interface Drawer {
+public interface Drawer extends LevelListener {
     // render visuals
-    void drawVisuals(Level level, Tank tank);
-
-    // calculate interpolated player screen coordinates
-    void processTankMotion(Tank tank);
+    void drawVisuals(Level level);
 
     void dispose();
 }

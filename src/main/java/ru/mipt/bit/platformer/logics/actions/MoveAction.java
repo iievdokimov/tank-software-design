@@ -1,25 +1,26 @@
 package ru.mipt.bit.platformer.logics.actions;
 
-import ru.mipt.bit.platformer.logics.Direction;
-import ru.mipt.bit.platformer.logics.Level;
-import ru.mipt.bit.platformer.logics.Tank;
+import ru.mipt.bit.platformer.logics.models.Direction;
+import ru.mipt.bit.platformer.logics.models.Level;
+import ru.mipt.bit.platformer.logics.models.Movable;
+import ru.mipt.bit.platformer.logics.models.Tank;
 
-public class MoveAction extends Action{
+public class MoveAction implements Action{
     private final Direction direction;
-    private final Tank tank;
+    private final Movable obj;
     private final Level level;
 
 
 
-    public MoveAction(Tank linkTank, Direction direction, Level linkLevel){
+    public MoveAction(Movable obj, Level level, Direction direction){
         this.direction = direction;
-        tank = linkTank;
-        level = linkLevel;
+        this.obj = obj;
+        this.level = level;
     }
 
     @Override
     public void process() {
-        tank.move(direction, level);
+        obj.move(direction, level);
     }
 
     public Direction getDirection() {
