@@ -10,61 +10,70 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
-import ru.mipt.bit.platformer.logics.Level;
-import ru.mipt.bit.platformer.logics.Tank;
+import ru.mipt.bit.platformer.logics.models.GameObject;
+import ru.mipt.bit.platformer.logics.models.Level;
+import ru.mipt.bit.platformer.logics.models.Tank;
+import ru.mipt.bit.platformer.logics.models.Tree;
+import ru.mipt.bit.platformer.util.GdxGameUtils;
 import ru.mipt.bit.platformer.util.TileMovement;
+import ru.mipt.bit.platformer.util.Vector2D;
+import ru.mipt.bit.platformer.visuals.visualobj_factory.VisualObjectFactoryRegistry;
+import ru.mipt.bit.platformer.visuals.visualobj_factory.VisualTankFactory;
+import ru.mipt.bit.platformer.visuals.visualobj_factory.VisualTreeFactory;
+
+import java.util.ArrayList;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class GdxDrawer implements Drawer {
-    private VisualLevel gdxLevel;
-    private VisualObject gdxTank;
-    private VisualObject gdxTree;
-    private VisualObject[] gdxTrees;
+    private TiledMap gdxLevel;
+    private VisualTank gdxTank;
+    private VisualTree gdxTree;
+    private ArrayList<VisualObject> visualObjects;
 
     private MapRenderer levelRenderer;
     private TileMovement tileMovement;
     private Batch batch;
     private static TiledMapTileLayer groundLayer;
 
-    public GdxDrawer(Level level, Tank tank, VisualLevel gdxLevel, VisualObject gdxTree, VisualObject gdxTank) {
-        this.gdxLevel = gdxLevel;
-        this.gdxTank = gdxTank;
-        this.gdxTree = gdxTree;
-        this.gdxTrees = new VisualObject[level.getTreeObstacles().size()];
+    private HealthBarSettings healthBarSettings;
+
+    public GdxDrawer(Level level, HealthBarSettings healthBarSettings) {
+        createVisuals(level);
+        visualObjects = new ArrayList<>();
         batch = new SpriteBatch();
-        levelRenderer = createSingleLayerMapRenderer(gdxLevel.getLevelTileMap(), batch);
-        groundLayer = getSingleLayer(gdxLevel.getLevelTileMap());
+        levelRenderer = createSingleLayerMapRenderer(gdxLevel, batch);
+        groundLayer = getSingleLayer(gdxLevel);
         tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
-        for (int i = 0; i < level.getTreeObstacles().size(); i++) {
-            gdxTrees[i] = new VisualObject(gdxTree);
-            moveRectangleAtTileCenter(groundLayer, gdxTrees[i].getRectangle(),
-                    level.getTreeObstacles().get(i).getCoordinates().toGridPoint2());
+        VisualObjectFactoryRegistry registry = new VisualObjectFactoryRegistry();
+        registry.registerFactory(Tank.class, new VisualTankFactory(gdxTank));
+        registry.registerFactory(Tree.class, new VisualTreeFactory(gdxTree));
+
+        this.healthBarSettings = healthBarSettings; //new HealthBarSettings(true);
+
+        for (GameObject gameObject : level.getObjects()) {
+            VisualObject visualObject = new VisualObjectHealthDecorator(registry.createVisualObject(gameObject), this.healthBarSettings);
+            visualObjects.add(visualObject);
+            moveRectangleAtTileCenter(groundLayer, visualObject.getRectangle(), gameObject.getCoordinates().toGridPoint2());
         }
 
-        moveRectangleAtTileCenter(groundLayer, gdxTank.getRectangle(), tank.getCoordinates().toGridPoint2());
     }
 
 
     @Override
-    public void drawVisuals(Level level, Tank tank) {
+    public void drawVisuals(Level level) {
         // render each tile of the level
         levelRenderer.render();
 
         // start recording all drawing commands
         batch.begin();
 
-        // render obstacles
-        for (int i = 0; i < gdxTrees.length; i++) {
-            // draw every tree with rotation=0f;
-            drawTextureRegionUnscaled(batch, gdxTrees[i].getGraphics(), gdxTrees[i].getRectangle(), 0f);
-            // drawTextureRegionUnscaled(batch, gdxTrees[i].getGraphics(), gdxTrees[i].getRectangle(), level.getTreeObstacles()[i].getRotation());
+        // render game objects
+        for (VisualObject visualObject : visualObjects) {
+            visualObject.processMotion(tileMovement);
+            visualObject.draw(batch);
         }
-
-        // render player
-        // moveRectangleAtTileCenter(groundLayer, gdxTank.getRectangle(), tank.getCoordinates());
-        drawTextureRegionUnscaled(batch, gdxTank.getGraphics(), gdxTank.getRectangle(), tank.getRotation());
 
         // submit all drawing requests
         batch.end();
@@ -72,27 +81,24 @@ public class GdxDrawer implements Drawer {
 
     }
 
-    @Override
-    public void processTankMotion(Tank playerTank) {
-        // calculate interpolated player screen coordinates
-        tileMovement.moveRectangleBetweenTileCenters(gdxTank.getRectangle(), playerTank.getCoordinates().toGridPoint2(),
-                playerTank.getDestCoordinates().toGridPoint2(), playerTank.getMotionProgress());
-    }
-
     public void dispose(){
-        // dispose obstacles' textures
-        gdxTree.dispose();
-        for (VisualObject tree : gdxTrees) {
-            tree.dispose();
+        // dispose visualObjects' textures
+        for (VisualObject visualObject : visualObjects) {
+            visualObject.dispose();
         }
-
-        // dispose playerTank texture
-        gdxTank.dispose();
 
         // dispose levelTile
         gdxLevel.dispose();
 
         batch.dispose();
     }
+
+    private void createVisuals(Level level){
+        gdxTank = new VisualTank("images/tank_blue.png", level.getPlayerTank());
+        gdxTree = new VisualTree("images/greenTree.png", new Tree(new Vector2D()));
+        gdxLevel = new TmxMapLoader().load("level.tmx");
+    }
+
+
 
 }

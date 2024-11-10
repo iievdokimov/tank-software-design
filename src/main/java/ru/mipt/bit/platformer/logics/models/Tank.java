@@ -1,13 +1,13 @@
-package ru.mipt.bit.platformer.logics;
+package ru.mipt.bit.platformer.logics.models;
 
-import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.util.Vector2D;
 
 
 import static com.badlogic.gdx.math.MathUtils.isEqual;
+import static com.badlogic.gdx.math.MathUtils.random;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.continueProgress;
 
-public class Tank {
+public class Tank implements GameObject, Livable {
     private final float motionStarted = 0f;
     private final float motionFinished = 1f;
 
@@ -17,13 +17,22 @@ public class Tank {
 
     private float motionProgress;
 
+    // TODO: move to constructor parameters
     private static final float MOVEMENT_SPEED = 0.4f;
 
-    public Tank(Vector2D location, Direction.simpleDirection rotationAngle) {
+    private float curHealth;
+    private final float fullHealth;
+
+    public Tank(Vector2D location, Direction direction) {
         coordinates = new Vector2D(location);
         destCoordinates = new Vector2D(coordinates);
-        direction = new Direction(rotationAngle);
+        this.direction = direction;
         motionProgress = motionFinished;
+
+        // TODO: move to constructor parameters
+        fullHealth = random(50, 100);
+        //currentHealth = fullHealth;
+        curHealth = random(1, fullHealth);
     }
 
     public void move(Direction direction, Level level){
@@ -51,7 +60,7 @@ public class Tank {
         this.direction = direction;
     }
 
-    public void updateMotionProgress(float deltaTime){
+    private void updateMotionProgress(float deltaTime){
         motionProgress = continueProgress(motionProgress, deltaTime, MOVEMENT_SPEED);
         if (isEqual(motionProgress, motionFinished)) {
             coordinates = destCoordinates;
@@ -63,10 +72,12 @@ public class Tank {
         motionProgress = motionFinished;
     }
 
+    @Override
     public Vector2D getCoordinates() {
         return coordinates;
     }
 
+    @Override
     public Vector2D getDestCoordinates() {
         return destCoordinates;
     }
@@ -75,11 +86,22 @@ public class Tank {
         return motionProgress;
     }
 
+    @Override
+    public void updateProgress(float deltaTime) {
+        updateMotionProgress(deltaTime);
+    }
+
+    @Override
     public float getRotation() {
         return direction.getAngle();
     }
 
     public Direction getDirection() {
         return direction;
+    }
+
+    @Override
+    public float getRelativeHealth() {
+        return curHealth / fullHealth;
     }
 }

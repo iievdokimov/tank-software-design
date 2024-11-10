@@ -4,21 +4,23 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.math.GridPoint2;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 
 
-import ru.mipt.bit.platformer.logics.*;
+import ru.mipt.bit.platformer.logics.AITanksActionsGenerator;
+import ru.mipt.bit.platformer.logics.ActionsGenerator;
+import ru.mipt.bit.platformer.logics.PlayerActionsGenerator;
 import ru.mipt.bit.platformer.logics.actions.Action;
-import ru.mipt.bit.platformer.logics.actions.ActionHandler;
+import ru.mipt.bit.platformer.logics.level_setup.FileLevelProvider;
+import ru.mipt.bit.platformer.logics.level_setup.LevelProvider;
+import ru.mipt.bit.platformer.logics.level_setup.RandomLevelProvider;
+import ru.mipt.bit.platformer.logics.models.Level;
 import ru.mipt.bit.platformer.util.Vector2D;
-import ru.mipt.bit.platformer.visuals.Drawer;
-import ru.mipt.bit.platformer.visuals.GdxDrawer;
-import ru.mipt.bit.platformer.visuals.VisualLevel;
-import ru.mipt.bit.platformer.visuals.VisualObject;
+import ru.mipt.bit.platformer.visuals.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class GameDesktopLauncher implements ApplicationListener {
 
@@ -26,61 +28,43 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     private Level level;
 
-    private Tank playerTank;
+    private ArrayList<ActionsGenerator> actionGenerators;
 
-    private ActionHandler actionHandler;
 
-    private PlayerInput inputManager;
+    public GameDesktopLauncher(Level level){
+        super();
+        this.level = level;
+    }
 
 
     @Override
     public void create() {
-        // create level
-        ArrayList<Vector2D> treeObstacleCoordinates = new ArrayList<Vector2D>();
-        treeObstacleCoordinates.add(new Vector2D(3, 3));
-        treeObstacleCoordinates.add(new Vector2D(1, 3));
 
-        Vector2D leftCorner = new Vector2D(0, 0);
-        Vector2D rightCorner = new Vector2D(9, 7);
-        level = new Level(leftCorner, rightCorner, treeObstacleCoordinates);
+        // TODO: dependency injection needed
+        HealthBarSettings healthBarSettings = new HealthBarSettings(true);
 
-        // create playerTank
-        Vector2D startCoordinates = new Vector2D(1, 1);
-        playerTank = new Tank(startCoordinates, Direction.simpleDirection.UP);
+        actionGenerators = new ArrayList<>();
+        actionGenerators.add(new PlayerActionsGenerator(level, healthBarSettings));
+        actionGenerators.add(new AITanksActionsGenerator(level));
 
-        //actionHandler = new ActionHandler();
-        inputManager = new PlayerInput(playerTank, level);
-
-        // create visuals
-        VisualObject visualTank = new VisualObject("images/tank_blue.png");
-        VisualObject visualTree = new VisualObject("images/greenTree.png");
-        VisualLevel visualLevel = new VisualLevel("level.tmx");
-
-        // create drawer
-        drawer = new GdxDrawer(level, playerTank, visualLevel, visualTree, visualTank);
+        drawer = new GdxDrawer(level, healthBarSettings);
     }
 
     @Override
     public void render() {
-        clear_screen();
+        clearScreen();
 
-        // get time passed since the last render
-        float deltaTime = Gdx.graphics.getDeltaTime();
+        Collection<Action> actions = new ArrayList<>();
+        actionGenerators.forEach(generator -> actions.addAll(generator.generate()));
+        actions.forEach(Action::process);
 
+        level.updateProgress(Gdx.graphics.getDeltaTime());
 
-        Action playerAction = inputManager.getAction();
-        ActionHandler.handle(playerAction);
-
-        drawer.processTankMotion(playerTank);
-
-        playerTank.updateMotionProgress(deltaTime);
-
-        drawer.drawVisuals(level, playerTank);
-
+        drawer.drawVisuals(level);
 
     }
 
-    private static void clear_screen() {
+    private static void clearScreen() {
         Gdx.gl.glClearColor(0f, 0f, 0.2f, 1f);
         Gdx.gl.glClear(GL_COLOR_BUFFER_BIT);
     }
@@ -108,8 +92,25 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+
+//        LevelProvider levelProvider = new FileLevelProvider(
+//                "src/main/resources/levels/level1.txt");
+
+        // use dependency injection to move construction process
+        LevelProvider levelProvider = new RandomLevelProvider(
+                new Vector2D(0, 0),
+                new Vector2D(7, 7),
+                0.1f, 4
+                );
+
+        Level level = levelProvider.getLevel();
+
         // level width: 10 tiles x 128px, height: 8 tiles x 128px
-        config.setWindowedMode(1280, 1024);
-        new Lwjgl3Application(new GameDesktopLauncher(), config);
+        Vector2D levelSize = level.getSize();
+        int squareTileWidth = 128;
+        config.setWindowedMode((int)(squareTileWidth * levelSize.x()), (int)(squareTileWidth * levelSize.y()));
+        // TODO: generate new level.tmx files for bigger than 8x10 levels (?)
+
+        new Lwjgl3Application(new GameDesktopLauncher(level), config);
     }
 }
