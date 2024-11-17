@@ -28,6 +28,7 @@ dependencies {
     implementation 'org.springframework:spring-context:5.3.29'
     implementation 'org.springframework:spring-core:5.3.29'
     implementation 'org.springframework:spring-beans:5.3.29'
+    implementation 'org.springframework.boot:spring-boot-starter'
 
     // JUnit 4 dependency
     testImplementation 'junit:junit:5.10.2'
