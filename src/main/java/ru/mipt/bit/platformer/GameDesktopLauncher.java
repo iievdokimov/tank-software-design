@@ -8,6 +8,8 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.mipt.bit.platformer.logics.action_generators.AITanksActionsGenerator;
 import ru.mipt.bit.platformer.logics.action_generators.ActionsGenerator;
 import ru.mipt.bit.platformer.logics.action_generators.BulletActionsGenerator;
@@ -18,6 +20,7 @@ import ru.mipt.bit.platformer.logics.level_setup.RandomLevelProvider;
 import ru.mipt.bit.platformer.logics.models.Level;
 import ru.mipt.bit.platformer.util.Vector2D;
 import ru.mipt.bit.platformer.visuals.*;
+import ru.mipt.bit.platformer.visuals.configuration.AppConfig;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,26 +33,32 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     private ArrayList<ActionsGenerator> actionGenerators;
 
+    private final ApplicationContext context;
 
-    public GameDesktopLauncher(Level level){
+
+    public GameDesktopLauncher(ApplicationContext context){
         super();
-        this.level = level;
+        this.context = context;
     }
 
 
     @Override
     public void create() {
+        LevelProvider levelProvider = context.getBean(LevelProvider.class);
+        this.level = levelProvider.getLevel();
 
-        // TODO: dependency injection needed
-        HealthBarSettings healthBarSettings = new HealthBarSettings(true);
+        HealthBarSettings healthBarSettings = context.getBean(HealthBarSettings.class);
+
+        // context.registerBean(Drawer.class, () -> new GdxDrawer(level, healthBarSettings));
+
+        // can't create drawer before levelProvider creates it (?)
+        drawer = new GdxDrawer(level, healthBarSettings);
+        level.subscribe(drawer);
 
         actionGenerators = new ArrayList<>();
         actionGenerators.add(new PlayerActionsGenerator(level, healthBarSettings));
         actionGenerators.add(new AITanksActionsGenerator(level));
-        actionGenerators.add(new BulletActionsGenerator(level));
-
-        drawer = new GdxDrawer(level, healthBarSettings);
-        level.subscribe(drawer);
+        actionGenerators.add(new BulletActionsGenerator(level)); // -> to Level:updateProgress
     }
 
     @Override
@@ -93,26 +102,14 @@ public class GameDesktopLauncher implements ApplicationListener {
     }
 
     public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-
-//        LevelProvider levelProvider = new FileLevelProvider(
-//                "src/main/resources/levels/level1.txt");
-
-        // use dependency injection to move construction process
-        LevelProvider levelProvider = new RandomLevelProvider(
-                new Vector2D(0, 0),
-                new Vector2D(7, 7),
-                0.1f, 4
-                );
-
-        Level level = levelProvider.getLevel();
-
-        // level width: 10 tiles x 128px, height: 8 tiles x 128px
-        Vector2D levelSize = level.getSize();
-        int squareTileWidth = 128;
+        Vector2D levelSize = context.getBean("levelSize", Vector2D.class);
+        int squareTileWidth = context.getBean("squareTileWidth", int.class);
         config.setWindowedMode((int)(squareTileWidth * levelSize.x()), (int)(squareTileWidth * levelSize.y()));
         // TODO: generate new level.tmx files for bigger than 8x10 levels (?)
 
-        new Lwjgl3Application(new GameDesktopLauncher(level), config);
+        new Lwjgl3Application(new GameDesktopLauncher(context), config);
     }
 }
